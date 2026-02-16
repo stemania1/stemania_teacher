@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "STEMania Teacher Portal",
   description: "Teacher resources and tools for STEMania educators",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -25,23 +29,20 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <script
             dangerouslySetInnerHTML={{
               __html: `
-                try {
-                  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.classList.add('dark');
-                  }
-                  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                    if (e.matches) {
+                (function() {
+                  try {
+                    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                       document.documentElement.classList.add('dark');
                     } else {
                       document.documentElement.classList.remove('dark');
                     }
-                  });
-                } catch (e) {}
+                  } catch (e) {}
+                })();
               `,
             }}
           />

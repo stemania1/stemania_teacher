@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -10,58 +11,46 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-teal-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header */}
-      <header className="flex items-center justify-between px-8 py-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white font-bold text-lg">
-            S
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <main className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        {/* Header with Logo */}
+        <header className="mb-16 flex justify-center">
+          <div className="relative h-24 w-64 sm:h-32 sm:w-80">
+            <Image
+              src="/logo/stemania-logo.png"
+              alt="STEMania Logo"
+              fill
+              className="object-contain"
+              priority
+              unoptimized
+            />
           </div>
-          <span className="text-xl font-bold text-gray-900 dark:text-white">
-            STEMania <span className="text-teal-600">Teacher Portal</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:text-teal-600 dark:text-gray-300 dark:hover:text-teal-400"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/sign-up"
-            className="rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-teal-700"
-          >
-            Get Started
-          </Link>
-        </div>
-      </header>
+        </header>
 
-      {/* Hero */}
-      <main className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-        <div className="max-w-3xl">
-          <h1 className="text-5xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-            Empowering{" "}
-            <span className="text-teal-600">STEM Educators</span>
+        {/* Hero Section */}
+        <section className="mb-20 text-center">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            Welcome to{" "}
+            <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
+              STEMania Teacher Portal
+            </span>
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400 sm:text-xl">
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300 sm:text-xl">
             Access lesson plans, class schedules, student resources, and
-            teaching tools — all in one place. The STEMania Teacher Portal
-            is your hub for everything you need to deliver amazing STEM
-            education.
+            teaching tools — all in one place.
           </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/login"
-              className="w-full rounded-lg bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-teal-700 hover:shadow-xl sm:w-auto"
+              className="rounded-lg bg-teal-600 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:bg-teal-500 dark:hover:bg-teal-600"
             >
-              Sign In to Your Account
+              Sign In
             </Link>
           </div>
-        </div>
+        </section>
 
         {/* Feature Cards */}
-        <div className="mt-20 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
             title="Lesson Plans"
             description="Access and manage curriculum-aligned lesson plans for all your classes."
@@ -89,13 +78,15 @@ export default async function Home() {
               </svg>
             }
           />
-        </div>
-      </main>
+        </section>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-        &copy; {new Date().getFullYear()} STEMania. All rights reserved.
-      </footer>
+        {/* Footer */}
+        <footer className="mt-20 border-t border-gray-200 pt-8 text-center text-gray-600 dark:border-gray-700 dark:text-gray-400">
+          <p className="text-sm">
+            &copy; {new Date().getFullYear()} STEMania. All rights reserved.
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }
