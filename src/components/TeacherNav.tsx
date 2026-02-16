@@ -7,10 +7,6 @@ import { UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Schedule", href: "/schedule" },
-  { label: "Lesson Plans", href: "/resources/lesson-plans" },
-  { label: "Worksheets", href: "/resources/worksheets" },
-  { label: "Presentations", href: "/resources/presentations" },
 ];
 
 export default function TeacherNav() {
