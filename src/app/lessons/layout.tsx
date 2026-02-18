@@ -1,6 +1,6 @@
 import TeacherNav from "@/components/TeacherNav";
 
-export default function ResourcesLayout({
+export default function LessonsLayout({
   children,
 }: {
   children: React.ReactNode;

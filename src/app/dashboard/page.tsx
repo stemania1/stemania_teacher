@@ -54,14 +54,11 @@ export default async function DashboardPage() {
             </p>
           </Link>
 
-          {/* Resources for Teachers */}
+          {/* My Lessons */}
           <Link
-            href="/resources"
-            className="relative rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+            href="/lessons"
+            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
           >
-            <span className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              Under Development
-            </span>
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900">
               <svg
                 className="h-6 w-6 text-teal-600 dark:text-teal-400"
@@ -78,10 +75,10 @@ export default async function DashboardPage() {
               </svg>
             </div>
             <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
-              Resources for Teachers
+              My Lessons
             </h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Access lesson plans, worksheets, presentations, and teaching materials.
+              View your assigned lesson plans and teaching materials.
             </p>
           </Link>
         </div>
