@@ -91,7 +91,7 @@ export default function LessonViewer({ lessonId, renderedHtml, lessonMeta }: Les
         suppressContentEditableWarning
       >
         <div
-          className="prose prose-teal max-w-none dark:prose-invert"
+          className="prose prose-neutral max-w-none dark:prose-invert"
           dangerouslySetInnerHTML={{ __html: renderedHtml }}
           style={{
             userSelect: "none",

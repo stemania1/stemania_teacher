@@ -15,7 +15,7 @@ export default function TeacherNav() {
   const pathname = usePathname();
 
   return (
-    <header className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+    <header className="border-b border-stemania-teal-200 bg-white dark:border-stemania-teal-800 dark:bg-gray-800">
       <div className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/dashboard" className="flex items-center">
           <div className="relative h-12 w-32 sm:h-16 sm:w-40">
@@ -40,8 +40,8 @@ export default function TeacherNav() {
                   href={item.href}
                   className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                      ? "bg-stemania-teal-50 text-stemania-teal-700 dark:bg-stemania-teal-900/30 dark:text-stemania-teal-400"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -64,8 +64,8 @@ export default function TeacherNav() {
               href={item.href}
               className={`whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                  ? "bg-stemania-teal-50 text-stemania-teal-700 dark:bg-stemania-teal-900/30 dark:text-stemania-teal-400"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
               }`}
             >
               {item.label}

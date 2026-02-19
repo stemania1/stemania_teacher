@@ -1,0 +1,46 @@
+/* ============================================
+   STEMania Brand Fonts & CSS Variables
+   Add this to the TOP of your existing globals.css
+   (above the @tailwind directives)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Primary — Teal (from robot arm + main letterforms) */
+  --color-primary:        #2BA5B5;
+  --color-primary-hover:  #1E8A98;
+  --color-primary-dark:   #156B76;
+  --color-primary-light:  #E0F5F7;
+  --color-primary-mid:    #7FCDD6;
+
+  /* Accents (from gear, patterns, robot elements) */
+  --color-red:            #D94545;
+  --color-red-light:      #FEF2F2;
+  --color-yellow:         #F5C842;
+  --color-yellow-light:   #FEFCE8;
+  --color-green:          #5BBD5B;
+  --color-green-light:    #F0FDF4;
+
+  /* Neutrals */
+  --color-text:           #374151;
+  --color-text-secondary: #6B7280;
+  --color-border:         #E5E7EB;
+  --color-bg:             #F3F4F6;
+  --color-surface:        #FFFFFF;
+  --color-dark:           #1E293B;
+
+  /* Typography */
+  --font-display:  'Nunito', system-ui, sans-serif;
+  --font-heading:  'DM Sans', system-ui, sans-serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+}
+
+.dark {
+  --color-text:           #E5E7EB;
+  --color-text-secondary: #9CA3AF;
+  --color-border:         #374151;
+  --color-bg:             #111827;
+  --color-surface:        #1F2937;
+}

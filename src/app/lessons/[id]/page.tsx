@@ -96,7 +96,7 @@ export default async function LessonViewPage({
   return (
     <>
       <nav className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-        <Link href="/lessons" className="text-teal-600 hover:underline dark:text-teal-400">
+        <Link href="/lessons" className="text-stemania-teal-600 hover:underline dark:text-stemania-teal-400">
           My Lessons
         </Link>
         {lessonMeta.curriculumTitle && (

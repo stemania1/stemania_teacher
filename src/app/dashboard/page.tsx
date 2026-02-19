@@ -31,9 +31,9 @@ export default async function DashboardPage() {
             <span className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-blue-800 dark:bg-blue-900 dark:text-blue-200">
               Under Development
             </span>
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-stemania-teal-100 dark:bg-stemania-teal-900">
               <svg
-                className="h-6 w-6 text-teal-600 dark:text-teal-400"
+                className="h-6 w-6 text-stemania-teal-600 dark:text-stemania-teal-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -59,9 +59,9 @@ export default async function DashboardPage() {
             href="/lessons"
             className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-stemania-teal-100 dark:bg-stemania-teal-900">
               <svg
-                className="h-6 w-6 text-teal-600 dark:text-teal-400"
+                className="h-6 w-6 text-stemania-teal-600 dark:text-stemania-teal-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

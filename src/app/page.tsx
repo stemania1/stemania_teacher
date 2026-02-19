@@ -5,14 +5,14 @@ import { redirect } from "next/navigation";
 
 const LANDING_SUBTITLE = "Your secure portal for STEMania teaching resources.";
 const SIGN_IN_CLASS =
-  "rounded-lg bg-teal-600 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:bg-teal-500 dark:hover:bg-teal-600";
+  "rounded-lg bg-stemania-teal-500 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-stemania-teal-600 focus:outline-none focus:ring-2 focus:ring-stemania-teal-500 focus:ring-offset-2 dark:bg-stemania-teal-500 dark:hover:bg-stemania-teal-600";
 
 export default async function Home() {
   const { userId } = await auth();
   if (userId) redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-stemania-teal-50 via-white to-stemania-green-50 dark:from-stemania-dark dark:via-gray-800 dark:to-gray-900">
       <main className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <header className="mb-16 flex justify-center">
           <div className="relative h-24 w-64 sm:h-32 sm:w-80">
@@ -28,9 +28,9 @@ export default async function Home() {
         </header>
 
         <section className="mb-20 text-center">
-          <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+          <h1 className="font-display mb-6 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
             Welcome to{" "}
-            <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-stemania-teal-600 to-stemania-teal-500 bg-clip-text text-transparent">
               STEMania Teacher Portal
             </span>
           </h1>
@@ -42,7 +42,7 @@ export default async function Home() {
           </Link>
         </section>
 
-        <footer className="mt-20 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+        <footer className="mt-20 border-stemania-teal-200 border-t pt-8 text-center text-sm text-gray-600 dark:border-stemania-teal-800 dark:text-gray-400">
           <p>&copy; {new Date().getFullYear()} STEMania. All rights reserved.</p>
         </footer>
       </main>
