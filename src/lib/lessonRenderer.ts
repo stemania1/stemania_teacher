@@ -58,6 +58,24 @@ function renderBlock(block: LessonBlock, signedUrlMap?: Map<string, string>): st
     return `<div class="lesson-block lesson-block-video"><video src="${escapeAttr(src)}" controls preload="metadata"></video>${caption ? `<p class="video-caption">${escapeHtml(caption)}</p>` : ""}</div>`;
   }
 
+  if (type === "presentation") {
+    let slides: string[] = [];
+    try {
+      const parsed = typeof content === "string" ? JSON.parse(content) : content;
+      if (parsed && Array.isArray(parsed.slides)) slides = parsed.slides;
+    } catch {}
+    if (slides.length === 0) {
+      return `<div class="lesson-block lesson-block-presentation"><p><em>Presentation slides unavailable.</em></p></div>`;
+    }
+    const imgs = slides
+      .map((key, i) => {
+        const url = signedUrlMap?.get(key) ?? "#";
+        return `<div class="presentation-slide"><img src="${escapeAttr(url)}" alt="Slide ${i + 1}" loading="lazy" draggable="false" style="pointer-events:none;max-width:100%;" /><span class="slide-number">${i + 1}</span></div>`;
+      })
+      .join("\n");
+    return `<div class="lesson-block lesson-block-presentation">${imgs}</div>`;
+  }
+
   if (type === "activity" || type === "quiz") {
     let text = "";
     if (typeof content === "string") text = content;

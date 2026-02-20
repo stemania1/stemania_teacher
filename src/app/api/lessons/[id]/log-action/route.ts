@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentTeacherFromDb } from "@/lib/lessonDeliveryAuth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
-const ALLOWED_ACTIONS = ["print_attempt", "copy_attempt", "download_attempt"] as const;
+const ALLOWED_ACTIONS = ["print_attempt", "copy_attempt", "download_attempt", "screenshot_attempt"] as const;
 
 export async function POST(
   request: NextRequest,

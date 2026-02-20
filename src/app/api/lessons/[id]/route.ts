@@ -69,6 +69,16 @@ export async function GET(
           storageKeys.add((c as { storage_key: string }).storage_key);
         }
       }
+      if (b.block_type === "presentation") {
+        try {
+          const parsed = typeof c === "string" ? JSON.parse(c) : c;
+          if (parsed && Array.isArray(parsed.slides)) {
+            for (const key of parsed.slides) {
+              if (typeof key === "string") storageKeys.add(key);
+            }
+          }
+        } catch {}
+      }
     }
 
     const signedUrlMap = new Map<string, string>();
