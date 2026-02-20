@@ -37,6 +37,9 @@ export default function RootLayout({
           />
         </head>
         <body className="font-body antialiased">
+          <a href="#main-content" className="skip-to-content">
+            Skip to content
+          </a>
           {children}
         </body>
       </html>

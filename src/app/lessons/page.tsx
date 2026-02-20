@@ -34,8 +34,7 @@ async function getAssignedLessons(): Promise<LessonItem[]> {
     .from("lessons")
     .select("id, title, description, estimated_duration, curriculum_id")
     .in("id", lessonIds)
-    .eq("status", "published")
-    .is("archived_at", null);
+    .eq("status", "published");
 
   if (!lessons?.length) return [];
 

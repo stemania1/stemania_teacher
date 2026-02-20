@@ -30,8 +30,7 @@ export async function GET() {
       .from("lessons")
       .select("id, title, description, estimated_duration, curriculum_id")
       .in("id", lessonIds)
-      .eq("status", "published")
-      .is("archived_at", null);
+      .eq("status", "published");
 
     if (lessError) throw new Error(lessError.message);
 

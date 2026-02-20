@@ -159,6 +159,8 @@ export default function PresentationViewer({
   return (
     <div
       ref={viewerRef}
+      role="region"
+      aria-label={`Presentation viewer: ${lessonTitle}`}
       className={`relative flex flex-col ${
         isFullscreen
           ? "h-screen bg-[#0f172a]"
@@ -194,6 +196,7 @@ export default function PresentationViewer({
           onClick={toggleFullscreen}
           className="ml-4 rounded-lg p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
           title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? (
             <svg
@@ -306,22 +309,21 @@ export default function PresentationViewer({
           type="button"
           onClick={goToPrev}
           disabled={currentSlide === 0}
+          aria-label="Previous slide"
           className="rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent"
         >
           ← Previous
         </button>
 
-        <span className="text-sm text-gray-300">
-          <span className="font-semibold text-white">
-            {currentSlide + 1}
-          </span>{" "}
-          of {totalSlides}
+        <span className="text-sm text-gray-300" aria-live="polite" aria-atomic="true">
+          Slide <span className="font-semibold text-white">{currentSlide + 1}</span> of {totalSlides}
         </span>
 
         <button
           type="button"
           onClick={goToNext}
           disabled={currentSlide === slides.length - 1}
+          aria-label="Next slide"
           className="rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent"
         >
           Next →
@@ -335,6 +337,8 @@ export default function PresentationViewer({
             key={s.slideNumber}
             type="button"
             onClick={() => goToSlide(i)}
+            aria-label={`Go to slide ${s.slideNumber}`}
+            aria-current={i === currentSlide ? "true" : undefined}
             className={`flex-shrink-0 overflow-hidden rounded-md border-2 transition-all ${
               i === currentSlide
                 ? "border-[var(--stemania-teal)] shadow-md shadow-[var(--stemania-teal)]/20"
