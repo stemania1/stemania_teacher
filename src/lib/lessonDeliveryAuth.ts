@@ -6,8 +6,6 @@ export interface CurrentTeacher {
   firstName: string;
   lastName: string;
   authUserId: string;
-  /** @deprecated Use authUserId */
-  clerkUserId: string;
 }
 
 export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> {
@@ -50,7 +48,6 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
     firstName: (user.first_name as string) || "",
     lastName: (user.last_name as string) || "",
     authUserId: authUser.id,
-    clerkUserId: authUser.id,
   };
 }
 
