@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
@@ -49,7 +48,12 @@ export default function TeacherNav() {
               </Link>
             ))}
           </div>
-          <UserButton afterSignOutUrl="/" />
+          <Link
+            href="/sign-out"
+            className="rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+          >
+            Sign Out
+          </Link>
         </nav>
       </div>
 

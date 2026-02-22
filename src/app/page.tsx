@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
+import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { redirect } from "next/navigation";
 
 const LANDING_SUBTITLE = "Your secure portal for STEMania teaching resources.";
@@ -8,8 +8,9 @@ const SIGN_IN_CLASS =
   "rounded-lg bg-stemania-teal-500 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-stemania-teal-600 focus:outline-none focus:ring-2 focus:ring-stemania-teal-500 focus:ring-offset-2 dark:bg-stemania-teal-500 dark:hover:bg-stemania-teal-600";
 
 export default async function Home() {
-  const { userId } = await auth();
-  if (userId) redirect("/dashboard");
+  const supabase = await createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) redirect("/dashboard");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stemania-teal-50 via-white to-stemania-green-50 dark:from-stemania-dark dark:via-gray-800 dark:to-gray-900">

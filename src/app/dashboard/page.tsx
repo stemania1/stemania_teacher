@@ -1,9 +1,27 @@
-import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { createServerSupabaseClient } from "@/lib/supabaseServer";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-  const firstName = user?.firstName || "Teacher";
+  const supabase = await createServerSupabaseClient();
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+  if (!authUser) {
+    redirect("/login");
+  }
+
+  let firstName = "Teacher";
+  if (authUser.email) {
+    const admin = getSupabaseAdmin();
+    const { data: dbUser } = await admin
+      .from("users")
+      .select("first_name")
+      .eq("email", authUser.email)
+      .single();
+    if (dbUser?.first_name) {
+      firstName = dbUser.first_name;
+    }
+  }
 
   return (
     <div>
@@ -17,13 +35,11 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Tiles */}
       <div>
         <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Quick Access
         </h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* My Information */}
           <Link
             href="/my-information"
             className="relative rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
@@ -54,7 +70,6 @@ export default async function DashboardPage() {
             </p>
           </Link>
 
-          {/* My Lessons */}
           <Link
             href="/lessons"
             className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"

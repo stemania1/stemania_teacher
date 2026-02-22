@@ -91,14 +91,6 @@ body {
   left: 0;
 }
 
-/* Hide Clerk sign-up links for invitation-only access */
-[data-clerk-element="footerAction"],
-[data-clerk-element="footerActionLink"],
-.cl-footerAction,
-.cl-footerActionLink {
-  display: none !important;
-}
-
 /* Hide scrollbar but allow scrolling */
 .scrollbar-hide {
   -ms-overflow-style: none;

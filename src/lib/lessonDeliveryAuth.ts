@@ -1,30 +1,56 @@
-import { auth } from "@clerk/nextjs/server";
+import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 export interface CurrentTeacher {
   employeeNumber: number;
   firstName: string;
   lastName: string;
+  authUserId: string;
+  /** @deprecated Use authUserId */
   clerkUserId: string;
 }
 
 export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> {
-  const { userId } = await auth();
-  if (!userId) return null;
+  const supabase = await createServerSupabaseClient();
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+  if (!authUser) return null;
 
-  const supabase = getSupabaseAdmin();
-  const { data: user, error } = await supabase
+  const admin = getSupabaseAdmin();
+
+  // Try by auth ID first
+  let { data: user, error } = await admin
     .from("users")
     .select("employee_number, first_name, last_name, clerk_user_id")
-    .eq("clerk_user_id", userId)
+    .eq("clerk_user_id", authUser.id)
     .single();
+
+  // Fallback: find by email and link the auth ID
+  if ((error || !user) && authUser.email) {
+    const { data: emailUser } = await admin
+      .from("users")
+      .select("employee_number, first_name, last_name, clerk_user_id")
+      .eq("email", authUser.email)
+      .single();
+
+    if (emailUser) {
+      if (!emailUser.clerk_user_id) {
+        await admin
+          .from("users")
+          .update({ clerk_user_id: authUser.id })
+          .eq("employee_number", emailUser.employee_number);
+      }
+      user = emailUser;
+      error = null;
+    }
+  }
 
   if (error || !user || user.employee_number == null) return null;
   return {
     employeeNumber: user.employee_number as number,
     firstName: (user.first_name as string) || "",
     lastName: (user.last_name as string) || "",
-    clerkUserId: (user.clerk_user_id as string) || userId,
+    authUserId: authUser.id,
+    clerkUserId: authUser.id,
   };
 }
 

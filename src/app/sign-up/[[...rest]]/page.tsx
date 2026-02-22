@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SignUp } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function SignUpPage() {
   return (
@@ -16,12 +16,20 @@ export default function SignUpPage() {
           />
         </div>
       </div>
-      <SignUp
-        path="/sign-up"
-        routing="path"
-        signInUrl="/login"
-        fallbackRedirectUrl="/dashboard"
-      />
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg dark:border-gray-700 dark:bg-gray-800">
+        <h1 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
+          Invitation Only
+        </h1>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">
+          This application is by invitation only. If you have received an invitation, please use the link provided in your email to create your account.
+        </p>
+        <Link
+          href="/login"
+          className="inline-block rounded-lg bg-stemania-teal-500 px-6 py-2 text-base font-semibold text-white transition-colors hover:bg-stemania-teal-600"
+        >
+          Sign In
+        </Link>
+      </div>
     </div>
   );
 }
