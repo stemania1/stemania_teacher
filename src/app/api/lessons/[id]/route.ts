@@ -3,6 +3,7 @@ import { getCurrentTeacherFromDb, hasAssignment } from "@/lib/lessonDeliveryAuth
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { renderLessonBlocks, type LessonBlock } from "@/lib/lessonRenderer";
 import { injectWatermarkIntoHtml } from "@/lib/watermark";
+import { handleApiError } from "@/lib/apiErrorHandler";
 
 const BUCKET = "lesson-assets";
 const SIGNED_URL_EXPIRES_SEC = 300;
@@ -118,10 +119,6 @@ export async function GET(
 
     return NextResponse.json({ renderedHtml, lessonMeta });
   } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to load lesson" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Failed to load lesson");
   }
 }

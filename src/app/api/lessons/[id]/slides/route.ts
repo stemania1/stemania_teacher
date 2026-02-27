@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentTeacherFromDb, hasAssignment } from "@/lib/lessonDeliveryAuth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { handleApiError } from "@/lib/apiErrorHandler";
 
 const BUCKET = "lesson-assets";
 const SIGNED_URL_EXPIRES_SEC = 300;
@@ -115,13 +116,6 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Failed to load slides",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, "Failed to load slides");
   }
 }

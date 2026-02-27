@@ -18,23 +18,23 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
   // Try by auth ID first
   let { data: user, error } = await admin
     .from("users")
-    .select("employee_number, first_name, last_name, clerk_user_id")
-    .eq("clerk_user_id", authUser.id)
+    .select("employee_number, first_name, last_name, supabase_user_id")
+    .eq("supabase_user_id", authUser.id)
     .single();
 
   // Fallback: find by email and link the auth ID
   if ((error || !user) && authUser.email) {
     const { data: emailUser } = await admin
       .from("users")
-      .select("employee_number, first_name, last_name, clerk_user_id")
+      .select("employee_number, first_name, last_name, supabase_user_id")
       .eq("email", authUser.email)
       .single();
 
     if (emailUser) {
-      if (!emailUser.clerk_user_id) {
+      if (!emailUser.supabase_user_id) {
         await admin
           .from("users")
-          .update({ clerk_user_id: authUser.id })
+          .update({ supabase_user_id: authUser.id })
           .eq("employee_number", emailUser.employee_number);
       }
       user = emailUser;

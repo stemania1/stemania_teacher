@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentTeacherFromDb } from "@/lib/lessonDeliveryAuth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
-
-const ALLOWED_ACTIONS = ["print_attempt", "copy_attempt", "download_attempt", "screenshot_attempt"] as const;
+import { handleApiError } from "@/lib/apiErrorHandler";
+import { parseBody, logActionSchema } from "@/lib/validations";
 
 export async function POST(
   request: NextRequest,
@@ -12,20 +12,11 @@ export async function POST(
     const { id: lessonId } = await params;
     const teacher = await getCurrentTeacherFromDb();
     if (!teacher) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json().catch(() => ({}));
-    const action = body.action;
-    if (!action || !ALLOWED_ACTIONS.includes(action)) {
-      return NextResponse.json(
-        { error: "Invalid action" },
-        { status: 400 }
-      );
-    }
+    const parsed = await parseBody(request, logActionSchema);
+    if ("error" in parsed) return parsed.error;
 
     const supabase = getSupabaseAdmin();
     const forwarded = request.headers.get("x-forwarded-for");
@@ -35,17 +26,13 @@ export async function POST(
     await supabase.from("lesson_access_log").insert({
       user_id: teacher.employeeNumber,
       lesson_id: lessonId,
-      action,
+      action: parsed.data.action,
       ip_address: ip,
       user_agent: userAgent,
     });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to log action" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Failed to log action");
   }
 }

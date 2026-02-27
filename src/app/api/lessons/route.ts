@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentTeacherFromDb } from "@/lib/lessonDeliveryAuth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { handleApiError } from "@/lib/apiErrorHandler";
 
 export async function GET() {
   try {
@@ -54,10 +55,6 @@ export async function GET() {
 
     return NextResponse.json({ lessons: list });
   } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to list lessons" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Failed to list lessons");
   }
 }
