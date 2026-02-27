@@ -41,7 +41,7 @@ describe("withErrorHandling", () => {
   });
 
   it("catches thrown errors", async () => {
-    const handler = withErrorHandling(async () => {
+    const handler = withErrorHandling(async (): Promise<NextResponse> => {
       throw new Error("Unauthorized");
     });
     const response = await handler();
