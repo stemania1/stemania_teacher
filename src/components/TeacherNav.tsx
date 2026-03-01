@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
@@ -10,11 +11,46 @@ const navItems = [
   { label: "Schedule", href: "/schedule" },
 ];
 
+interface UserMe {
+  email: string | null;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+}
+
 export default function TeacherNav() {
   const pathname = usePathname();
+  const [user, setUser] = useState<UserMe | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/users/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setUser(data))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
+
+  const initials = user
+    ? [user.firstName, user.lastName]
+        .map((s) => (s || "").trim().charAt(0))
+        .filter(Boolean)
+        .join("")
+        .toUpperCase() || "?"
+    : "?";
 
   return (
     <header className="border-b border-stemania-teal-200 bg-white dark:border-stemania-teal-800 dark:bg-gray-800">
@@ -48,12 +84,53 @@ export default function TeacherNav() {
               </Link>
             ))}
           </div>
-          <Link
-            href="/sign-out"
-            className="rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-          >
-            Sign Out
-          </Link>
+
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-stemania-teal-100 text-sm font-semibold text-stemania-teal-700 ring-1 ring-stemania-teal-200 dark:bg-stemania-teal-900 dark:text-stemania-teal-300 dark:ring-stemania-teal-700"
+              aria-expanded={menuOpen}
+              aria-haspopup="true"
+            >
+              {initials}
+            </button>
+            {menuOpen && (
+              <div
+                className="absolute right-0 top-full z-50 mt-2 w-56 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                role="menu"
+              >
+                {user && (
+                  <div className="border-b border-gray-100 px-4 py-3 dark:border-gray-700">
+                    <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                      {user.displayName}
+                    </p>
+                    {user.email && (
+                      <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                        {user.email}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <Link
+                  href="/dashboard/my-information"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+                  role="menuitem"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  My Information
+                </Link>
+                <Link
+                  href="/sign-out"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+                  role="menuitem"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Sign Out
+                </Link>
+              </div>
+            )}
+          </div>
         </nav>
       </div>
 

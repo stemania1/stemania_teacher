@@ -5,6 +5,7 @@ export interface CurrentTeacher {
   employeeNumber: number;
   firstName: string;
   lastName: string;
+  email: string | null;
   authUserId: string;
 }
 
@@ -18,7 +19,7 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
   // Try by auth ID first
   let { data: user, error } = await admin
     .from("users")
-    .select("employee_number, first_name, last_name, supabase_user_id")
+    .select("employee_number, first_name, last_name, email, supabase_user_id")
     .eq("supabase_user_id", authUser.id)
     .single();
 
@@ -26,7 +27,7 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
   if ((error || !user) && authUser.email) {
     const { data: emailUser } = await admin
       .from("users")
-      .select("employee_number, first_name, last_name, supabase_user_id")
+      .select("employee_number, first_name, last_name, email, supabase_user_id")
       .eq("email", authUser.email)
       .single();
 
@@ -47,6 +48,7 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
     employeeNumber: user.employee_number as number,
     firstName: (user.first_name as string) || "",
     lastName: (user.last_name as string) || "",
+    email: (user.email as string) || authUser.email || null,
     authUserId: authUser.id,
   };
 }
