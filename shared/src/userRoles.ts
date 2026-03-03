@@ -1,10 +1,10 @@
-export type UserRole = "super_admin" | "admin" | "teacher" | "director" | "partner" | "contractor";
+export type UserRole = "super_admin" | "admin" | "teacher" | "owner" | "partner" | "contractor";
 
 export const ROLES = {
   SUPER_ADMIN: "super_admin" as const,
   ADMIN: "admin" as const,
   TEACHER: "teacher" as const,
-  DIRECTOR: "director" as const,
+  OWNER: "owner" as const,
   PARTNER: "partner" as const,
   CONTRACTOR: "contractor" as const,
 } as const;
@@ -13,7 +13,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   super_admin: "Super Admin",
   admin: "Admin",
   teacher: "Teacher",
-  director: "Director",
+  owner: "Owner",
   partner: "Partner",
   contractor: "Contractor",
 };
@@ -22,7 +22,7 @@ export const ROLE_HIERARCHY: Record<UserRole, number> = {
   super_admin: 4,
   admin: 3,
   teacher: 2,
-  director: 2,
+  owner: 2,
   partner: 2,
   contractor: 1,
 };
@@ -41,7 +41,7 @@ export function canEditUserRole(
   if (currentUserRole === ROLES.ADMIN) {
     return (
       targetUserRole === ROLES.TEACHER ||
-      targetUserRole === ROLES.DIRECTOR ||
+      targetUserRole === ROLES.OWNER ||
       targetUserRole === ROLES.PARTNER ||
       targetUserRole === ROLES.CONTRACTOR
     );

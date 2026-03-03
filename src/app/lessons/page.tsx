@@ -164,7 +164,7 @@ export default async function MyLessonsPage() {
             No lessons assigned yet
           </h3>
           <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-gray-400">
-            No lessons have been assigned to you yet. Contact your director
+            No lessons have been assigned to you yet. Contact your franchise owner
             if you believe this is an error.
           </p>
         </div>
