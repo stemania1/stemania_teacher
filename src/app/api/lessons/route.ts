@@ -29,7 +29,7 @@ export async function GET() {
 
     const { data: lessons, error: lessError } = await supabase
       .from("lessons")
-      .select("id, title, description, estimated_duration, curriculum_id")
+      .select("id, title, description, estimated_duration_minutes, curriculum_id")
       .in("id", lessonIds)
       .eq("status", "published");
 
@@ -43,14 +43,14 @@ export async function GET() {
 
     type CurriculumRow = { id: string; title: string; subject: string | null; grade_level: string | null };
     const currMap = new Map((curricula || []).map((c: CurriculumRow) => [c.id, c]));
-    const list = (lessons || []).map((l: { id: string; title: string; description: string | null; estimated_duration: number | null; curriculum_id: string }) => ({
+    const list = (lessons || []).map((l: { id: string; title: string; description: string | null; estimated_duration_minutes: number | null; curriculum_id: string }) => ({
       lessonId: l.id,
       title: l.title,
       description: l.description ?? null,
       curriculumTitle: currMap.get(l.curriculum_id)?.title ?? null,
       subject: currMap.get(l.curriculum_id)?.subject ?? null,
       gradeLevel: currMap.get(l.curriculum_id)?.grade_level ?? null,
-      estimatedDuration: l.estimated_duration ?? null,
+      estimatedDuration: l.estimated_duration_minutes ?? null,
     }));
 
     return NextResponse.json({ lessons: list });

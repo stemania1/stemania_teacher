@@ -32,7 +32,7 @@ async function getAssignedLessons(): Promise<LessonItem[]> {
 
   const { data: lessons } = await supabase
     .from("lessons")
-    .select("id, title, description, estimated_duration, curriculum_id")
+    .select("id, title, description, estimated_duration_minutes, curriculum_id")
     .in("id", lessonIds)
     .eq("status", "published");
 
@@ -77,7 +77,7 @@ async function getAssignedLessons(): Promise<LessonItem[]> {
       id: string;
       title: string;
       description: string | null;
-      estimated_duration: number | null;
+      estimated_duration_minutes: number | null;
       curriculum_id: string;
     }) => ({
       lessonId: l.id,
@@ -86,7 +86,7 @@ async function getAssignedLessons(): Promise<LessonItem[]> {
       curriculumTitle: currMap.get(l.curriculum_id)?.title ?? null,
       subject: currMap.get(l.curriculum_id)?.subject ?? null,
       gradeLevel: currMap.get(l.curriculum_id)?.grade_level ?? null,
-      estimatedDuration: l.estimated_duration ?? null,
+      estimatedDuration: l.estimated_duration_minutes ?? null,
       hasPresentation: presLessonIds.has(l.id),
     })
   );

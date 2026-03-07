@@ -32,7 +32,7 @@ async function getLessonContent(lessonId: string) {
 
   const { data: lesson, error: lessonError } = await supabase
     .from("lessons")
-    .select("id, title, description, estimated_duration, curriculum_id")
+    .select("id, title, description, estimated_duration_minutes, curriculum_id")
     .eq("id", lessonId)
     .single();
 
@@ -169,8 +169,8 @@ async function getLessonContent(lessonId: string) {
       curriculumTitle:
         (curriculum as { title: string } | null)?.title ?? null,
       duration:
-        (lesson as { estimated_duration: number | null })
-          .estimated_duration ?? null,
+        (lesson as { estimated_duration_minutes: number | null })
+          .estimated_duration_minutes ?? null,
     },
     segments,
     hasPresentation,
