@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { ThemedLogo } from "@/components/ThemedLogo";
 import { useState, useEffect, useRef } from "react";
 
 const navItems = [
@@ -55,16 +55,9 @@ export default function TeacherNav() {
   return (
     <header className="border-b border-stemania-teal-200 bg-white dark:border-stemania-teal-800 dark:bg-gray-800">
       <div className="container mx-auto flex items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/dashboard" className="flex-shrink-0">
-          <div className="relative h-10 w-28 sm:h-14 sm:w-36">
-            <Image
-              src="/logo/stemania-logo.png"
-              alt="STEMania Teacher Portal"
-              fill
-              className="object-contain"
-              priority
-              unoptimized
-            />
+        <Link href="/dashboard" className="flex-shrink-0" aria-label="Return to dashboard">
+          <div className="relative h-10 w-[120px] sm:h-12 sm:w-36">
+            <ThemedLogo alt="STEMania Logo" className="object-contain" priority />
           </div>
         </Link>
         <nav aria-label="Main navigation" className="flex items-center gap-2">
