@@ -38,9 +38,17 @@ export default async function Home() {
           <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300 sm:text-xl">
             {LANDING_SUBTITLE}
           </p>
-          <Link href="/login" className={SIGN_IN_CLASS}>
-            Sign In
-          </Link>
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-6">
+            <Link href="/login" className={SIGN_IN_CLASS}>
+              Sign In
+            </Link>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_APP_URL || "https://admin.stemania.com"}/join`}
+              className="rounded-lg bg-gradient-to-r from-teal-600 to-sky-600 px-8 py-3 text-base font-semibold text-white transition-colors hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:from-teal-500 dark:to-sky-600 dark:hover:opacity-95"
+            >
+              Join Our Team
+            </Link>
+          </div>
         </section>
 
         <footer className="mt-20 border-stemania-teal-200 border-t pt-8 text-center text-sm text-gray-600 dark:border-stemania-teal-800 dark:text-gray-400">
