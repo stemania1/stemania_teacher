@@ -52,6 +52,12 @@ export default async function Home() {
         </section>
 
         <footer className="mt-20 border-stemania-teal-200 border-t pt-8 text-center text-sm text-gray-600 dark:border-stemania-teal-800 dark:text-gray-400">
+          <p className="mb-2">
+            Questions? Email us at{" "}
+            <a href="mailto:admin@stemania.com" className="text-stemania-teal-600 underline hover:text-stemania-teal-700 dark:text-stemania-teal-400 dark:hover:text-stemania-teal-300">
+              admin@stemania.com
+            </a>
+          </p>
           <p>&copy; {new Date().getFullYear()} STEMania. All rights reserved.</p>
         </footer>
       </main>
