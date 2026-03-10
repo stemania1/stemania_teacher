@@ -1,7 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+function subscribeMatchMedia(callback: () => void) {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getMatchMediaSnapshot() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 interface ThemedLogoProps {
   alt: string;
@@ -14,16 +28,11 @@ export function ThemedLogo({
   className = "object-contain",
   priority = false,
 }: ThemedLogoProps) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mq.matches);
-
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
+  const isDark = useSyncExternalStore(
+    subscribeMatchMedia,
+    getMatchMediaSnapshot,
+    getServerSnapshot
+  );
 
   return (
     <Image

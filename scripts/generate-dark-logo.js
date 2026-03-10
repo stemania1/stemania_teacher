@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Node script */
 const sharp = require("sharp");
 const path = require("path");
 
