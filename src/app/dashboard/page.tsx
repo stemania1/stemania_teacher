@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { redirect } from "next/navigation";
+import OnboardingChecklist from "@/components/OnboardingChecklist";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -25,6 +26,8 @@ export default async function DashboardPage() {
 
   return (
     <div>
+      <OnboardingChecklist />
+
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Welcome back, {firstName}!

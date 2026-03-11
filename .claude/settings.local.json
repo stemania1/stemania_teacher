@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"/c/Users/curti/Projects/STEMania Admin/stemania_teacher\" && npm run build 2>&1)",
+      "Bash(claude config:*)"
+    ]
+  }
+}
