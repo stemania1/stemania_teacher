@@ -96,9 +96,15 @@ export default function OnboardingChecklist() {
       title: "W-9 Submitted",
       description: "Submit your tax form so we can pay you.",
       action: (
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          Your admin will send this
-        </span>
+        <button
+          type="button"
+          onClick={() => {
+            window.location.href = adminUrl + "/w9";
+          }}
+          className="rounded-lg bg-stemania-teal-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-stemania-teal-600"
+        >
+          Complete W-9
+        </button>
       ),
     },
     {
