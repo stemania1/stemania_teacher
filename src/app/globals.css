@@ -117,3 +117,38 @@ body {
   background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
   background-size: 200% 100%;
 }
+
+/* Legal pages (privacy policy, terms of service) */
+.legal-content h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+.legal-content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: inherit;
+}
+.legal-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+.legal-content ul {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+.legal-content li {
+  margin-bottom: 0.25rem;
+}
+.legal-content hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+}
+:root.dark .legal-content hr {
+  border-top-color: #374151;
+}
