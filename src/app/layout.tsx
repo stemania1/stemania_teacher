@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "STEMania Teacher Portal",
@@ -34,11 +35,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-body antialiased">
+      <body className="flex min-h-screen flex-col font-body antialiased">
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
-        {children}
+        <div className="flex flex-1 flex-col">{children}</div>
+        <SiteFooter />
       </body>
     </html>
   );
