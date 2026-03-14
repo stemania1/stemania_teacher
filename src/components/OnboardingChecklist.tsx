@@ -70,7 +70,10 @@ export default function OnboardingChecklist() {
 
   if (loading || !data || data.steps.fullyOnboarded) return null;
 
-  const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL ?? "";
+  const adminAppUrl =
+    process.env.NEXT_PUBLIC_ADMIN_APP_URL ??
+    process.env.NEXT_PUBLIC_ADMIN_URL ??
+    "";
 
   const steps: StepConfig[] = [
     {
@@ -84,7 +87,7 @@ export default function OnboardingChecklist() {
       description: "Secure your account with a permanent password.",
       action: (
         <Link
-          href={`${adminUrl}/set-password`}
+          href={`${adminAppUrl}/set-password`}
           className="rounded-lg bg-stemania-teal-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-stemania-teal-600"
         >
           Set Password
@@ -96,15 +99,14 @@ export default function OnboardingChecklist() {
       title: "W-9 Submitted",
       description: "Submit your tax form so we can pay you.",
       action: (
-        <button
-          type="button"
-          onClick={() => {
-            window.location.href = adminUrl + "/w9";
-          }}
-          className="rounded-lg bg-stemania-teal-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-stemania-teal-600"
+        <a
+          href={`${adminAppUrl}/login?next=/w9`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-[#0D6EFD] hover:underline"
         >
-          Complete W-9
-        </button>
+          Complete your W-9
+        </a>
       ),
     },
     {
@@ -168,6 +170,7 @@ export default function OnboardingChecklist() {
           return (
             <li
               key={step.key}
+              data-testid={step.key === "w9Submitted" ? "step-w9Submitted" : undefined}
               className={`flex items-start gap-4 rounded-lg p-3 transition-colors ${
                 complete
                   ? "opacity-60"

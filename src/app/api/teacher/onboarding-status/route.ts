@@ -20,14 +20,20 @@ export async function GET() {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  const { data: w9Submission } = await admin
+    .from("w9_submissions")
+    .select("status")
+    .eq("user_id", teacher.employeeNumber)
+    .eq("status", "completed")
+    .maybeSingle();
+
+  const w9Submitted = !!w9Submission;
+
   const { data: signingRequests } = await admin
     .from("signing_requests")
     .select("document_type, status")
     .eq("user_id", teacher.employeeNumber)
     .neq("status", "cancelled");
-
-  const w9Submitted =
-    signingRequests?.some((r) => r.document_type === "w9") ?? false;
 
   const contractSigned =
     signingRequests?.some(

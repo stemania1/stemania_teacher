@@ -84,6 +84,19 @@ export async function GET(request: NextRequest) {
     return response;
   };
 
+  // Handle cross-domain session transfer via refresh token
+  const refreshToken = searchParams.get("refresh_token");
+  if (refreshToken) {
+    const response = NextResponse.redirect(`${origin}/dashboard`);
+    const supabase = makeSupabase(response);
+    const { error } = await supabase.auth.refreshSession({ refresh_token: refreshToken });
+    if (!error) {
+      return runActiveUserCheck(response, "/dashboard", supabase);
+    }
+    console.error("[auth/callback] Refresh token session failed:", error.message);
+    return redirectToLogin("auth");
+  }
+
   if (code) {
     const response = NextResponse.redirect(`${origin}${destination}`);
     const supabase = makeSupabase(response);

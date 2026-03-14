@@ -17,6 +17,10 @@
 - Auth: Supabase Auth
 - Shares same Supabase project as stemania_admin
 
+## Shared Docs
+- Style guide, backlog, PRD, architecture, and other shared docs live in the admin repo:
+  ~/Projects/STEMania Admin/stemania_admin/docs/
+
 ## Rules
 - Always run npm run build after making changes
 - Never modify files outside this repository

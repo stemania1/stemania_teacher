@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(cd \"/c/Users/curti/Projects/STEMania Admin/stemania_teacher\" && npm run build 2>&1)",
-      "Bash(claude config:*)"
+      "Bash(claude config:*)",
+      "Bash(cd \"C:/Users/curti/Projects/STEMania Admin/stemania_teacher\" && npm run build 2>&1)",
+      "Bash(cd \"C:/Users/curti/Projects/STEMania Admin/stemania_teacher\" && npm install pdf-lib 2>&1 | tail -5)",
+      "Bash(echo \"\" >> \"C:/Users/curti/Projects/STEMania Admin/stemania_teacher/.env.local\" && echo \"NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=\" >> \"C:/Users/curti/Projects/STEMania Admin/stemania_teacher/.env.local\" && echo \"Added\")",
+      "Bash(cd \"C:/Users/curti/Projects/STEMania Admin/stemania_admin\" && npm run build 2>&1)"
     ]
   }
 }
