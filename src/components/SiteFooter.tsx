@@ -21,6 +21,9 @@ export function SiteFooter() {
           Terms of Service
         </Link>
       </nav>
+      <p className="mt-1 text-[14px] text-[#6C757D]">
+        © {new Date().getFullYear()} STEMania
+      </p>
     </footer>
   );
 }
