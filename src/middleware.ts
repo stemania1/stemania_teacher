@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { checkRateLimit, checkAuthRateLimit } from "@/lib/rateLimit";
 import { validateCsrf } from "@/lib/csrf";
 
-const PUBLIC_ROUTES = ["/", "/login", "/sign-up", "/sign-out", "/auth/callback"];
+const PUBLIC_ROUTES = ["/", "/login", "/sign-up", "/sign-out", "/auth/callback", "/api/auth", "/reset-password", "/privacy-policy", "/terms"];
 const AUTH_ROUTES = ["/login", "/sign-up", "/api/auth"];
 
 function isPublicRoute(pathname: string): boolean {
@@ -30,8 +30,8 @@ export async function middleware(request: NextRequest) {
     if (!rl.success) return rl.response!;
   }
 
-  // CSRF check for mutating API requests
-  if (pathname.startsWith("/api/")) {
+  // CSRF check for mutating API requests (skip public auth routes)
+  if (pathname.startsWith("/api/") && !pathname.startsWith("/api/auth/")) {
     const csrfError = validateCsrf(request);
     if (csrfError) return csrfError;
   }
