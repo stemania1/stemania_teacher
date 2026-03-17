@@ -34,13 +34,31 @@ We use the information we collect to:
 
 ---
 
-## 3. Data Storage and Security
+## 3. Google Sign-In and Google User Data
 
-We store data on secure servers and use industry-standard measures (including encryption in transit and at rest where applicable) to protect your information. Access to personal and tax-related data is restricted to authorized personnel and systems necessary to operate the Services.
+When you sign in with Google (Google OAuth) on STEMania Admin or STEMania Teacher, we access and store limited Google user data. This section describes our practices for that data in compliance with the Google API Services User Data Policy and Google APIs Terms of Service.
+
+**Data Accessed:** Our application accesses the following Google user data when you choose "Sign in with Google":
+- Your **email address**
+- **Profile information** (name and profile picture)
+
+**Data Usage:** We use your Google email address to create or link your account, authenticate you, and identify you within the Services. We use your Google profile name and profile picture to display your identity in the app (e.g., in the account area or user interface) and to personalize your experience. We do not use Google user data for marketing, advertising, or any purpose other than account management and in-app display.
+
+**Data Sharing:** We do **not** share any Google user data with third parties. Your Google email, name, and profile picture are used only within our systems for account management and in-app display and are not provided to Resend, Stripe, Firma, CloudConvert, or any other service provider. We do not sell Google user data.
+
+**Data Storage & Protection:** We store your Google email address, name, and profile picture in our secure database. All stored data is protected using industry-standard security measures (see Section 4 below), including encryption in transit and at rest. Access to user data is restricted to authorized personnel and systems required to operate the Services.
+
+**Data Retention & Deletion:** We retain your Google user data (email, name, profile picture) for as long as your account is active to provide the Services and for legitimate business and legal purposes. You may request deletion of your account and all associated data, including Google user data, at any time by emailing **admin@stemania.com** with your request. We will process deletion requests in accordance with our data deletion process (see Section 7) and will remove your data within the timeframes described there.
 
 ---
 
-## 4. Sharing and Disclosure
+## 4. Data Storage and Security
+
+We store data on secure servers and use industry-standard measures to protect your information, including encryption in transit (TLS) and encryption at rest where applicable. Access to personal and tax-related data is restricted to authorized personnel and systems necessary to operate the Services. We require our service providers to protect your data under contractual obligations.
+
+---
+
+## 5. Sharing and Disclosure
 
 We may share your information:
 
@@ -53,37 +71,41 @@ We do not sell your personal information.
 
 ---
 
-## 5. Data Retention
+## 6. Data Retention
 
 We retain your information for as long as your account is active or as needed to provide the Services and comply with legal, tax, or contractual obligations. Document retention (e.g., W-9s, signed contracts) may extend beyond account closure where required by law.
 
 ---
 
-## 6. Your Rights and Choices
+## 7. Your Rights and Choices
 
-Depending on your location, you may have the right to access, correct, or delete your personal information, or to object to or restrict certain processing. You can update much of your profile and contact information through the Services. For other requests, contact us using the details below.
+Depending on your location, you may have the right to access, correct, or delete your personal information, or to object to or restrict certain processing. You can update much of your profile and contact information through the Services.
+
+**Requesting deletion of your data:** You may request deletion of your account and all associated personal data (including data obtained from Google) at any time by emailing **admin@stemania.com**. We will process your request and remove your data in accordance with our data deletion process (typically within 30 days, with a grace period for recovery where applicable). Some data may be retained as required by law (e.g., audit logs, tax documents).
+
+For other privacy requests, contact us using the details in Section 11.
 
 ---
 
-## 7. Cookies and Similar Technologies
+## 8. Cookies and Similar Technologies
 
 We use cookies and similar technologies for authentication, session management, and security. You can control cookie settings through your browser; some features may not function correctly if cookies are disabled.
 
 ---
 
-## 8. Children
+## 9. Children
 
 The Services are not directed at children under 13. We do not knowingly collect personal information from children under 13.
 
 ---
 
-## 9. Changes to This Policy
+## 10. Changes to This Policy
 
 We may update this Privacy Policy from time to time. We will post the updated policy on the Services and, where appropriate, notify you by email or through the app. Your continued use after changes constitutes acceptance of the revised policy.
 
 ---
 
-## 10. Contact Us
+## 11. Contact Us
 
 For questions about this Privacy Policy or our privacy practices:
 
