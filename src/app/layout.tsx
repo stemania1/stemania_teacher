@@ -1,13 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SiteFooter } from "@/components/SiteFooter";
+
+export const viewport: Viewport = {
+  themeColor: "#20C997",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "STEMania Teacher Portal",
   description: "Teacher resources and tools for STEMania educators",
+  applicationName: "STEMania Teacher",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-icon.png",
+    icon: [{ url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: "/icons/icon-180.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "STEMania Teacher",
+    statusBarStyle: "default",
   },
 };
 

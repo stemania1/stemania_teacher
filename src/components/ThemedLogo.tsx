@@ -40,7 +40,7 @@ export function ThemedLogo({
       alt={alt}
       fill
       className={className}
-      unoptimized
+      sizes="200px"
       loading={priority ? "eager" : undefined}
       priority={priority}
     />

@@ -21,7 +21,7 @@ export default async function Home() {
         fill
         className="object-cover object-center"
         loading="eager"
-        sizes="100vw"
+        sizes="(max-width: 1920px) 100vw, 1920px"
         quality={80}
       />
 
@@ -44,7 +44,7 @@ export default async function Home() {
               height={48}
               className="h-10 w-auto sm:h-12"
               priority
-              unoptimized
+              sizes="(max-width: 640px) 120px, 160px"
             />
           </Link>
         </header>

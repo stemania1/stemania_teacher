@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { checkRateLimit, checkAuthRateLimit } from "@/lib/rateLimit";
 import { validateCsrf } from "@/lib/csrf";
 
-const PUBLIC_ROUTES = ["/", "/login", "/sign-up", "/sign-out", "/auth/callback", "/api/auth", "/reset-password", "/privacy-policy", "/terms"];
+const PUBLIC_ROUTES = ["/", "/login", "/sign-up", "/sign-out", "/auth/callback", "/api/auth", "/reset-password", "/privacy-policy", "/terms", "/manifest", "/manifest.webmanifest", "/robots.txt"];
 const AUTH_ROUTES = ["/login", "/sign-up", "/api/auth"];
 
 function isPublicRoute(pathname: string): boolean {

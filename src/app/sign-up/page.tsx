@@ -12,7 +12,7 @@ export default function SignUpPage() {
             fill
             className="object-contain"
             priority
-            unoptimized
+            sizes="(max-width: 640px) 192px, 224px"
           />
         </div>
       </div>
