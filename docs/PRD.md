@@ -143,7 +143,40 @@ STEMania Teacher shall conform to **WCAG 2.1 Level AA** standards to ensure the 
 
 ---
 
-## 8. Non-Functional Requirements
+## 8. Test-Driven Development (TDD)
+
+This project follows a **test-driven development** methodology. All new features and bug fixes must adhere to the TDD cycle:
+
+### 8.1 Process
+
+1. **Red** — Write a failing test that defines the expected behavior before writing any implementation code
+2. **Green** — Write the minimum code necessary to make the test pass
+3. **Refactor** — Clean up the implementation while keeping all tests green
+
+### 8.2 Testing Stack
+
+- **Unit Tests:** Vitest with React Testing Library for component and utility testing
+- **API Route Tests:** Vitest for handler logic, mocking Supabase clients
+- **Accessibility Tests:** axe-core integrated into component tests
+
+### 8.3 Requirements
+
+- Every new feature must have tests written before the implementation
+- Every bug fix must include a regression test that reproduces the bug before applying the fix
+- Tests must be co-located with their source files or in a parallel `__tests__` directory
+- All tests must pass before code is merged — CI enforces this gate
+- Test coverage should trend upward; new code should not decrease overall coverage
+- Tests should be deterministic — no flaky tests, no reliance on external services without mocking
+
+### 8.4 What to Test
+
+- **API routes:** Auth guards (unauthorized returns 401/403), valid responses, input validation, error handling
+- **Components:** Rendering, user interactions, state changes, accessibility (keyboard navigation, ARIA)
+- **Utilities/helpers:** Pure function behavior, edge cases, error conditions
+
+---
+
+## 9. Non-Functional Requirements
 
 - **Security:** HTTPS-only, CSP headers, rate limiting, Sentry error tracking
 - **Performance:** Server-side rendering for initial page loads, optimized image delivery
@@ -153,7 +186,7 @@ STEMania Teacher shall conform to **WCAG 2.1 Level AA** standards to ensure the 
 
 ---
 
-## 9. API Routes (Teacher App)
+## 10. API Routes (Teacher App)
 
 | Method | Route | Description |
 |--------|-------|-------------|
