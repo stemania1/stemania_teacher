@@ -55,7 +55,6 @@ describe("GET /api/teacher/onboarding-status", () => {
   it("returns fully onboarded status with all steps complete", async () => {
     vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
 
-    let fromCallCount = 0;
     const mockSb = {
       from: vi.fn().mockImplementation((table: string) => {
         if (table === "users") {

@@ -1,4 +1,4 @@
-import { handleApiError, ApiError, withErrorHandling } from "@/lib/apiErrorHandler";
+import { handleApiError, withErrorHandling } from "@/lib/apiErrorHandler";
 import { NextResponse } from "next/server";
 
 vi.mock("@sentry/nextjs", () => ({

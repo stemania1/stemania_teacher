@@ -42,10 +42,8 @@ describe("GET /api/classes/[classId]/students", () => {
   it("returns 403 when teacher is not assigned to the class", async () => {
     vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
 
-    let callCount = 0;
     const mockSb = {
       from: vi.fn().mockImplementation(() => {
-        callCount++;
         return {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
