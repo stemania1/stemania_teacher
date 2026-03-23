@@ -183,6 +183,7 @@ This project follows a **test-driven development** methodology. All new features
 - **Browser Support:** Latest two versions of Chrome, Firefox, Safari, and Edge
 - **Mobile:** Responsive design, mobile-first approach for attendance-taking
 - **Dark Mode:** Full dark mode support across all pages
+- **Legal Links:** Links to the Privacy Policy (`/privacy-policy`) and Terms of Service (`/terms`) must be visible and accessible on every page, via the global `SiteFooter` component
 
 ---
 
