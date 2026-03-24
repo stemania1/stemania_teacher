@@ -18,7 +18,7 @@ test.describe("Teacher login", () => {
   test("shows error for invalid email continuation", async ({ page }) => {
     await page.goto("/login");
     await page.locator("#login-email").fill("not-a-real-email@invalid.test");
-    await page.getByRole("button", { name: /continue/i }).click();
+    await page.getByRole("button", { name: "Continue", exact: true }).click();
 
     // Should proceed to password step or show an error
     // (depends on whether the email exists in the system)
@@ -36,7 +36,7 @@ test.describe("Teacher login", () => {
 
     await page.goto("/login");
     await page.locator("#login-email").fill(email!);
-    await page.getByRole("button", { name: /continue/i }).click();
+    await page.getByRole("button", { name: "Continue", exact: true }).click();
 
     await page.locator("#login-password").fill(password!);
     await page.getByRole("button", { name: /sign in/i }).click();

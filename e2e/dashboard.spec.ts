@@ -19,7 +19,7 @@ test.describe("Dashboard", () => {
     await page.goto("/dashboard");
 
     const nav = page.locator("header");
-    await expect(nav.getByRole("link", { name: "Dashboard" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Dashboard", exact: true })).toBeVisible();
     await expect(nav.getByRole("link", { name: "My Lessons" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "My Classes" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Schedule" })).toBeVisible();
