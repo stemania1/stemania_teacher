@@ -86,6 +86,7 @@ export default function TeacherNav() {
               className="flex h-9 w-9 items-center justify-center rounded-full bg-stemania-teal-100 text-sm font-semibold text-stemania-teal-700 ring-1 ring-stemania-teal-200 dark:bg-stemania-teal-900 dark:text-stemania-teal-300 dark:ring-stemania-teal-700"
               aria-expanded={menuOpen}
               aria-haspopup="true"
+              aria-label="Open user menu"
             >
               {initials}
             </button>

@@ -50,6 +50,7 @@ export default async function ClassesPage() {
       {classes.length === 0 ? (
         <div className="rounded-xl border border-gray-200 bg-white p-12 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <svg
+            aria-hidden="true"
             className="mx-auto h-12 w-12 text-gray-400"
             fill="none"
             stroke="currentColor"
@@ -80,6 +81,7 @@ export default async function ClassesPage() {
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-stemania-teal-100 dark:bg-stemania-teal-900">
                 <svg
+                  aria-hidden="true"
                   className="h-6 w-6 text-stemania-teal-600 dark:text-stemania-teal-400"
                   fill="none"
                   stroke="currentColor"
@@ -104,6 +106,7 @@ export default async function ClassesPage() {
               <span className="inline-flex items-center text-sm font-medium text-stemania-teal-600 dark:text-stemania-teal-400">
                 Take Attendance
                 <svg
+                  aria-hidden="true"
                   className="ml-1 h-4 w-4"
                   fill="none"
                   stroke="currentColor"

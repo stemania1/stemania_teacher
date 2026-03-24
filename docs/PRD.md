@@ -62,7 +62,12 @@
 
 ### 4.3 Schedule
 
-- View upcoming class schedule (placeholder/future feature)
+- `/schedule` — weekly class schedule for the authenticated teacher
+- **Today's Classes** section highlighting classes scheduled for the current day, each linking to the attendance page
+- **Weekly Calendar Grid** — 7-column grid (Mon–Sun) showing all assigned classes by day, with today's column visually highlighted
+- **Unscheduled Classes** section for classes without `days_of_week` set, prompting the teacher to contact their administrator
+- Each class card shows name, time slot, and student count
+- Class data sourced from `bookeo_classes.days_of_week` (text array column)
 
 ---
 
@@ -119,18 +124,32 @@ Unique constraint on `(class_id, student_id, session_date)`.
 
 ---
 
-## 7. ADA Compliance
+## 7. Access Model
+
+### 7.1 Teacher Access
+
+Teachers should only need to access **teacher.stemania.com**. All teacher-facing functionality (lessons, attendance, schedule, onboarding, profile) lives in this app. The teacher app shares the same Supabase project (database, auth, storage) as admin.stemania.com, but teachers never need to visit the admin app.
+
+### 7.2 Super Admin Simulation
+
+A super admin should be able to simulate (impersonate) any teacher in teacher.stemania.com. This allows administrators to see exactly what a teacher sees — their assigned classes, lessons, schedule, and attendance records — for support, debugging, and QA purposes. The simulation should be clearly indicated in the UI so the admin knows they are viewing as another user.
+
+<!-- TODO: Define implementation details — e.g., query param ?simulateUser=<employeeNumber>, header-based switching, or a dedicated /admin/simulate route. Must require SUPER_ADMIN_EMAIL auth. -->
+
+---
+
+## 8. ADA Compliance
 
 STEMania Teacher shall conform to **WCAG 2.1 Level AA** standards to ensure the application is accessible to users with disabilities. This is a cross-cutting requirement that applies to all features.
 
-### 7.1 Perceivable
+### 8.1 Perceivable
 
 - All non-text content (icons, images) must have meaningful `alt` text or `aria-label` attributes
 - Color must not be the sole means of conveying information — status indicators (present/absent/tardy) use both color and text labels
 - Text must have a minimum contrast ratio of 4.5:1 against its background (3:1 for large text)
 - Content must be readable and functional at up to 200% zoom without horizontal scrolling
 
-### 7.2 Operable
+### 8.2 Operable
 
 - All interactive elements must be fully keyboard accessible with visible focus indicators
 - Skip navigation links must be provided (skip-to-content)
@@ -138,21 +157,21 @@ STEMania Teacher shall conform to **WCAG 2.1 Level AA** standards to ensure the 
 - Focus order must follow a logical reading sequence
 - Touch targets must be at least 44x44 CSS pixels on mobile
 
-### 7.3 Understandable
+### 8.3 Understandable
 
 - Form inputs must have associated `<label>` elements or `aria-label` attributes
 - Error messages must clearly identify the field in error and describe how to fix it
 - Navigation must be consistent across pages
 - Language attribute must be set on the `<html>` element
 
-### 7.4 Robust
+### 8.4 Robust
 
 - HTML must be valid and well-structured with proper semantic elements
 - ARIA roles, states, and properties must be used correctly (e.g., `aria-expanded`, `aria-haspopup`, `role="menu"`)
 - The application must work with common assistive technologies (screen readers, switch devices)
 - Dynamic content updates must be announced to screen readers via live regions where appropriate
 
-### 7.5 Testing & Compliance
+### 8.5 Testing & Compliance
 
 - Automated accessibility testing should be integrated into the CI pipeline (e.g., axe-core, Lighthouse)
 - Manual keyboard-only and screen reader testing should be performed for each new feature
@@ -161,23 +180,23 @@ STEMania Teacher shall conform to **WCAG 2.1 Level AA** standards to ensure the 
 
 ---
 
-## 8. Test-Driven Development (TDD)
+## 9. Test-Driven Development (TDD)
 
 This project follows a **test-driven development** methodology. All new features and bug fixes must adhere to the TDD cycle:
 
-### 8.1 Process
+### 9.1 Process
 
 1. **Red** — Write a failing test that defines the expected behavior before writing any implementation code
 2. **Green** — Write the minimum code necessary to make the test pass
 3. **Refactor** — Clean up the implementation while keeping all tests green
 
-### 8.2 Testing Stack
+### 9.2 Testing Stack
 
 - **Unit Tests:** Vitest with React Testing Library for component and utility testing
 - **API Route Tests:** Vitest for handler logic, mocking Supabase clients
 - **Accessibility Tests:** axe-core integrated into component tests
 
-### 8.3 Requirements
+### 9.3 Requirements
 
 - Every new feature must have tests written before the implementation
 - Every bug fix must include a regression test that reproduces the bug before applying the fix
@@ -186,7 +205,7 @@ This project follows a **test-driven development** methodology. All new features
 - Test coverage should trend upward; new code should not decrease overall coverage
 - Tests should be deterministic — no flaky tests, no reliance on external services without mocking
 
-### 8.4 What to Test
+### 9.4 What to Test
 
 - **API routes:** Auth guards (unauthorized returns 401/403), valid responses, input validation, error handling
 - **Components:** Rendering, user interactions, state changes, accessibility (keyboard navigation, ARIA)
@@ -194,7 +213,7 @@ This project follows a **test-driven development** methodology. All new features
 
 ---
 
-## 9. Non-Functional Requirements
+## 10. Non-Functional Requirements
 
 - **Security:** HTTPS-only, CSP headers, rate limiting, Sentry error tracking
 - **Performance:** Server-side rendering for initial page loads, optimized image delivery
@@ -205,7 +224,7 @@ This project follows a **test-driven development** methodology. All new features
 
 ---
 
-## 10. API Routes (Teacher App)
+## 11. API Routes (Teacher App)
 
 | Method | Route | Description |
 |--------|-------|-------------|
@@ -217,5 +236,7 @@ This project follows a **test-driven development** methodology. All new features
 | GET | `/api/classes/[classId]/attendance/history` | Attendance history |
 | GET | `/api/lessons` | Assigned lessons |
 | GET | `/api/lessons/[id]` | Lesson content |
+| GET | `/api/lessons/[id]/slides` | Signed slide URLs for presentations |
+| POST | `/api/lessons/[id]/slides/refresh` | Refresh expired signed slide URLs |
 | POST | `/api/lessons/[id]/log-action` | Log blocked actions |
 | GET | `/api/teacher/onboarding-status` | Onboarding progress |

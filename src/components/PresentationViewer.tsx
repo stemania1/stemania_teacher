@@ -260,6 +260,7 @@ export default function PresentationViewer({
 
             {/* Watermark overlay — repeating diagonal grid */}
             <div
+              aria-hidden="true"
               style={{
                 position: "absolute",
                 inset: 0,
@@ -338,7 +339,7 @@ export default function PresentationViewer({
             type="button"
             onClick={() => goToSlide(i)}
             aria-label={`Go to slide ${s.slideNumber}`}
-            aria-current={i === currentSlide ? "true" : undefined}
+            aria-current={i === currentSlide ? "page" : undefined}
             className={`flex-shrink-0 overflow-hidden rounded-md border-2 transition-all ${
               i === currentSlide
                 ? "border-[var(--stemania-teal)] shadow-md shadow-[var(--stemania-teal)]/20"

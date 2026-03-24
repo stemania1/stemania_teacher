@@ -220,6 +220,7 @@ export default function AttendancePage() {
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -236,9 +237,12 @@ export default function AttendancePage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 dark:border-gray-700 dark:bg-gray-800">
+      <div role="tablist" aria-label="Attendance views" className="mb-6 flex gap-1 rounded-lg border border-gray-200 bg-gray-100 p-1 dark:border-gray-700 dark:bg-gray-800">
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "take"}
+          aria-controls="tabpanel-take"
           onClick={() => setTab("take")}
           className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             tab === "take"
@@ -250,6 +254,9 @@ export default function AttendancePage() {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "history"}
+          aria-controls="tabpanel-history"
           onClick={() => setTab("history")}
           className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             tab === "history"
@@ -262,9 +269,11 @@ export default function AttendancePage() {
       </div>
 
       {tab === "history" ? (
-        <AttendanceHistory classId={classId} />
+        <div id="tabpanel-history" role="tabpanel" aria-label="History">
+          <AttendanceHistory classId={classId} />
+        </div>
       ) : (
-        <>
+        <div id="tabpanel-take" role="tabpanel" aria-label="Take Attendance">
           {/* Controls */}
           <div className="mb-6 flex flex-wrap items-center gap-4">
             <div>
@@ -325,7 +334,7 @@ export default function AttendancePage() {
               <span className="text-stemania-red-600 dark:text-stemania-red-400">
                 {counts.absent} Absent
               </span>
-              <span className="text-stemania-yellow-500">
+              <span className="text-stemania-yellow-600 dark:text-stemania-yellow-400">
                 {counts.tardy} Tardy
               </span>
             </div>
@@ -388,6 +397,8 @@ export default function AttendancePage() {
                             key={opt.value}
                             type="button"
                             onClick={() => setStatus(student.id, opt.value)}
+                            aria-label={`Mark ${student.name} as ${opt.label}`}
+                            aria-pressed={entry?.status === opt.value}
                             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                               entry?.status === opt.value
                                 ? opt.activeClass
@@ -403,6 +414,7 @@ export default function AttendancePage() {
                       <input
                         type="text"
                         placeholder="Notes (optional)"
+                        aria-label={`Notes for ${student.name}`}
                         value={entry?.notes || ""}
                         onChange={(e) => setNotes(student.id, e.target.value)}
                         className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm shadow-sm focus:border-stemania-teal-500 focus:outline-none focus:ring-1 focus:ring-stemania-teal-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white sm:w-48"
@@ -432,6 +444,7 @@ export default function AttendancePage() {
               </button>
               {saveMessage && (
                 <p
+                  role="alert"
                   className={`text-sm ${
                     saveMessage.type === "success"
                       ? "text-stemania-green-600 dark:text-stemania-green-400"
@@ -443,7 +456,7 @@ export default function AttendancePage() {
               )}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

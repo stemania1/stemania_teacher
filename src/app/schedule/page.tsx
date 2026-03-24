@@ -158,6 +158,7 @@ export default async function SchedulePage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white p-12 text-center dark:border-gray-600 dark:bg-gray-800">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-stemania-teal-100 text-stemania-teal-600 dark:bg-stemania-teal-900/30 dark:text-stemania-teal-400">
             <svg
+              aria-hidden="true"
               className="h-8 w-8"
               fill="none"
               viewBox="0 0 24 24"
@@ -216,6 +217,7 @@ export default async function SchedulePage() {
                     <span className="mt-3 inline-flex items-center text-sm font-medium text-stemania-teal-600 dark:text-stemania-teal-400">
                       Take Attendance
                       <svg
+                        aria-hidden="true"
                         className="ml-1 h-4 w-4"
                         fill="none"
                         stroke="currentColor"

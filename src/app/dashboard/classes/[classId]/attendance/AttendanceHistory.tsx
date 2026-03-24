@@ -78,6 +78,7 @@ export default function AttendanceHistory({ classId }: { classId: string }) {
           <button
             type="button"
             onClick={() => toggle(session.date)}
+            aria-expanded={expanded.has(session.date)}
             className="flex w-full items-center justify-between px-6 py-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50"
           >
             <div>
@@ -91,12 +92,13 @@ export default function AttendanceHistory({ classId }: { classId: string }) {
                 <span className="text-stemania-red-600 dark:text-stemania-red-400">
                   {session.counts.absent} Absent
                 </span>
-                <span className="text-stemania-yellow-500">
+                <span className="text-stemania-yellow-600 dark:text-stemania-yellow-400">
                   {session.counts.tardy} Tardy
                 </span>
               </div>
             </div>
             <svg
+              aria-hidden="true"
               className={`h-5 w-5 text-gray-400 transition-transform ${
                 expanded.has(session.date) ? "rotate-180" : ""
               }`}
@@ -135,7 +137,7 @@ export default function AttendanceHistory({ classId }: { classId: string }) {
                             ? "bg-stemania-green-50 text-stemania-green-600 dark:bg-stemania-green-500/10 dark:text-stemania-green-400"
                             : record.status === "absent"
                               ? "bg-stemania-red-50 text-stemania-red-600 dark:bg-stemania-red-500/10 dark:text-stemania-red-400"
-                              : "bg-stemania-yellow-50 text-stemania-yellow-500 dark:bg-stemania-yellow-400/10 dark:text-stemania-yellow-400"
+                              : "bg-stemania-yellow-50 text-stemania-yellow-600 dark:bg-stemania-yellow-400/10 dark:text-stemania-yellow-400"
                         }`}
                       >
                         {record.status.charAt(0).toUpperCase() +

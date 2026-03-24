@@ -78,7 +78,7 @@ export default function LessonViewer({ lessonId, renderedHtml, lessonMeta }: Les
 
       <div
         ref={containerRef}
-        className="lesson-viewer-content mx-auto max-w-3xl px-6 py-8"
+        className="lesson-viewer-content mx-auto max-w-3xl px-6 py-8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stemania-teal-500"
         style={{
           userSelect: "none",
           WebkitUserSelect: "none",
