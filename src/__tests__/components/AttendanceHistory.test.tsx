@@ -3,6 +3,7 @@
  */
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { axe } from "vitest-axe";
 import AttendanceHistory from "@/app/dashboard/classes/[classId]/attendance/AttendanceHistory";
 
 describe("AttendanceHistory", () => {
@@ -87,6 +88,72 @@ describe("AttendanceHistory", () => {
     expect(screen.getByText("Alice")).toBeTruthy();
     expect(screen.getByText("Bob")).toBeTruthy();
     expect(screen.getByText("Sick")).toBeTruthy();
+  });
+
+  it("has no accessibility violations with sessions displayed", async () => {
+    const sessions = [
+      {
+        date: "2026-03-23",
+        records: [
+          { id: "r1", studentId: "s1", studentName: "Alice", status: "present", notes: null },
+          { id: "r2", studentId: "s2", studentName: "Bob", status: "absent", notes: "Sick" },
+        ],
+        counts: { present: 1, absent: 1, tardy: 0 },
+      },
+    ];
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ sessions }),
+    });
+
+    const { container } = render(<AttendanceHistory classId="cls-1" />);
+    await waitFor(() => {
+      expect(screen.getByText(/1 Present/)).toBeTruthy();
+    });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it("has no accessibility violations with expanded session", async () => {
+    const sessions = [
+      {
+        date: "2026-03-23",
+        records: [
+          { id: "r1", studentId: "s1", studentName: "Alice", status: "present", notes: null },
+        ],
+        counts: { present: 1, absent: 0, tardy: 0 },
+      },
+    ];
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ sessions }),
+    });
+
+    const { container } = render(<AttendanceHistory classId="cls-1" />);
+    await waitFor(() => {
+      expect(screen.getByText(/1 Present/)).toBeTruthy();
+    });
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button"));
+
+    expect(screen.getByText("Alice")).toBeTruthy();
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it("has no accessibility violations in empty state", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ sessions: [] }),
+    });
+
+    const { container } = render(<AttendanceHistory classId="cls-1" />);
+    await waitFor(() => {
+      expect(screen.getByText(/no attendance records/i)).toBeTruthy();
+    });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 
   it("collapses an expanded session on second click", async () => {

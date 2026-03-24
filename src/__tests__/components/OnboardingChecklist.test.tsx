@@ -2,6 +2,7 @@
  * @vitest-environment jsdom
  */
 import { render, screen, waitFor } from "@testing-library/react";
+import { axe } from "vitest-axe";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
 
 // Mock next/link to render a plain anchor
@@ -98,5 +99,15 @@ describe("OnboardingChecklist", () => {
     await waitFor(() => {
       expect(container.innerHTML).toBe("");
     });
+  });
+
+  it("has no accessibility violations when checklist is visible", async () => {
+    mockFetch(partialSteps);
+    const { container } = render(<OnboardingChecklist />);
+    await waitFor(() => {
+      expect(screen.getByText("Getting Started")).toBeTruthy();
+    });
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });
