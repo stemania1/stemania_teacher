@@ -95,28 +95,76 @@ Every API route test should cover:
 
 ---
 
-## E2E Tests (TODO)
+## E2E Tests (Playwright)
 
-E2E tests should be added using Playwright for the following critical flows:
+### Configuration
 
-### Flows Requiring E2E Coverage
+- **Config file:** `playwright.config.ts`
+- **Test directory:** `e2e/`
+- **Base URL:** `http://localhost:3001`
+- **Browsers:** Chromium, Firefox, WebKit
+- **Auth:** Storage state saved in `e2e/.auth/teacher.json` (gitignored)
 
-| Flow | Description |
-|------|-------------|
-| **Teacher login** | Email/password login, Google OAuth, redirect to dashboard |
-| **Lesson viewing** | Navigate to lessons, open a lesson, verify content renders with watermark |
-| **Attendance taking** | Navigate to class, select date, mark students, save, verify persistence |
-| **Class management** | View assigned classes, navigate to attendance |
-| **Onboarding** | Dashboard shows checklist for incomplete onboarding, hides when complete |
-| **Schedule** | View weekly schedule, verify today highlighting |
+### Scripts
 
-### E2E Setup (TODO)
+```bash
+npm run test:e2e          # Run all E2E tests (headless)
+npm run test:e2e:headed   # Run with visible browser
+npm run test:e2e:ui       # Interactive Playwright UI mode
+```
 
-- [ ] Install Playwright: `npm install -D @playwright/test`
-- [ ] Create `playwright.config.ts` with base URL `http://localhost:3001`
-- [ ] Add `e2e/` directory for E2E test files
-- [ ] Add `npm run test:e2e` script to `package.json`
-- [ ] Set up test fixtures for authenticated teacher sessions
+### Setup
+
+1. Install Playwright browsers: `npx playwright install`
+2. Set E2E credentials in `.env`:
+   ```
+   E2E_TEACHER_EMAIL=your-test-teacher@example.com
+   E2E_TEACHER_PASSWORD=your-test-teacher-password
+   ```
+3. The dev server starts automatically via `playwright.config.ts` webServer
+
+### Auth Fixture
+
+The `e2e/auth.setup.ts` file logs in a test teacher before all tests and saves
+the browser session. All spec files run as an authenticated teacher by default.
+
+Tests that need unauthenticated state (e.g., login tests) override this:
+
+```typescript
+test.use({ storageState: { cookies: [], origins: [] } });
+```
+
+### Test Files
+
+```
+e2e/
+├── auth.setup.ts        # Authenticates test teacher, saves session
+├── auth.teardown.ts     # Cleans up auth state file
+├── login.spec.ts        # Login flow (unauthenticated)
+├── dashboard.spec.ts    # Dashboard, nav, quick access cards
+├── lessons.spec.ts      # Lesson list and navigation
+├── classes.spec.ts      # Class list and navigation to attendance
+├── attendance.spec.ts   # Attendance taking, tabs, student toggling
+└── schedule.spec.ts     # Schedule page and navigation
+```
+
+### Flows Covered
+
+| Flow | Spec File | Key Tests |
+|------|-----------|-----------|
+| **Teacher login** | `login.spec.ts` | Sign-in form, auth redirect, email/password login |
+| **Dashboard** | `dashboard.spec.ts` | Welcome heading, nav links, user menu, quick access |
+| **Lesson viewing** | `lessons.spec.ts` | Lesson list, empty state, navigation to lesson |
+| **Class management** | `classes.spec.ts` | Class list, empty state, navigation to attendance |
+| **Attendance taking** | `attendance.spec.ts` | Tabs, date picker, student toggling, mark all, history |
+| **Schedule** | `schedule.spec.ts` | Schedule page, today/weekly sections, empty state |
+
+### Writing New E2E Tests
+
+- Place test files in `e2e/` with the `.spec.ts` extension
+- Tests run as an authenticated teacher by default (via storage state)
+- Use `test.skip()` for tests that depend on test data that may not exist
+- Prefer accessible selectors: `getByRole()`, `getByLabel()`, `getByText()`
 
 ---
 
