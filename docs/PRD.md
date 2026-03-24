@@ -37,10 +37,28 @@
 
 ### 4.2 My Lessons
 
-- List of assigned lessons grouped by curriculum
-- Lesson viewer with rendered HTML content and signed asset URLs
-- Presentation/slide viewer
-- Copy/print/screenshot protection with action logging
+- `/lessons` — list of assigned lessons grouped by curriculum
+- Each lesson card shows title, description, estimated duration, and a "Slides" badge if the lesson contains a presentation
+- Lesson viewer (`/lessons/[id]`) with rendered HTML content and signed asset URLs (5-minute expiration)
+- Breadcrumb navigation: My Lessons → Curriculum → Lesson Title
+- Watermark overlay — teacher name and employee number watermarked on all lesson content and slides
+- Access logging — every lesson view is recorded in `lesson_access_log` with watermark hash
+
+#### Presentation Viewer
+
+- Inline slide viewer for lessons containing presentation blocks
+- Fullscreen mode with keyboard navigation (← / → arrow keys)
+- Thumbnail strip for quick slide navigation
+- Signed URL auto-refresh — slide URLs refresh automatically before expiration to prevent broken images
+
+#### Content Protection
+
+- Copy/print/screenshot protection with action logging to `lesson_access_log`
+- Right-click context menu disabled
+- Keyboard shortcuts blocked: Ctrl+C, Ctrl+P, Ctrl+S, Ctrl+A, Ctrl+U, PrintScreen, F12, Ctrl+Shift+I
+- `user-select: none` on all lesson content
+- Print blocked via `beforeprint` event and `@media print` CSS rule
+- Slide images rendered with `pointer-events: none` to block right-click → Save Image
 
 ### 4.3 Schedule
 
