@@ -34,7 +34,7 @@ export async function GET() {
     // Get class details from bookeo_classes
     const { data: classes, error: classError } = await supabase
       .from("bookeo_classes")
-      .select("id, name, description, start_time, end_time")
+      .select("id, name, description, start_time, end_time, days_of_week")
       .in("id", classIds);
 
     if (classError) throw new Error(classError.message);
@@ -46,12 +46,14 @@ export async function GET() {
         description: string | null;
         start_time: string | null;
         end_time: string | null;
+        days_of_week: string[] | null;
       }) => ({
         classId: c.id,
         name: c.name,
         description: c.description ?? null,
         startTime: c.start_time ?? null,
         endTime: c.end_time ?? null,
+        daysOfWeek: c.days_of_week ?? [],
       })
     );
 
