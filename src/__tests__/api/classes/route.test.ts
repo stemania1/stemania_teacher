@@ -119,6 +119,7 @@ describe("GET /api/classes", () => {
       description: "Intro to math",
       startTime: null,
       endTime: null,
+      daysOfWeek: [],
     });
     expect(body.classes[1]).toEqual({
       classId: "cls-2",
@@ -126,6 +127,7 @@ describe("GET /api/classes", () => {
       description: null,
       startTime: "09:00",
       endTime: "10:00",
+      daysOfWeek: [],
     });
   });
 

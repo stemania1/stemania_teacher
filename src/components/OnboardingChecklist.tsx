@@ -27,6 +27,7 @@ interface StepConfig {
 function CheckIcon() {
   return (
     <svg
+      aria-hidden="true"
       className="h-5 w-5 text-white"
       fill="none"
       stroke="currentColor"
@@ -156,7 +157,14 @@ export default function OnboardingChecklist() {
       </div>
 
       {/* Progress bar */}
-      <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+      <div
+        role="progressbar"
+        aria-valuenow={completedCount}
+        aria-valuemin={0}
+        aria-valuemax={steps.length}
+        aria-label={`Onboarding progress: ${completedCount} of ${steps.length} steps complete`}
+        className="mb-6 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
+      >
         <div
           className="h-2 rounded-full bg-emerald-500 transition-all duration-500"
           style={{ width: `${(completedCount / steps.length) * 100}%` }}

@@ -49,6 +49,7 @@ export default async function DashboardPage() {
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-stemania-teal-100 dark:bg-stemania-teal-900">
               <svg
+                aria-hidden="true"
                 className="h-6 w-6 text-stemania-teal-600 dark:text-stemania-teal-400"
                 fill="none"
                 stroke="currentColor"
@@ -76,6 +77,7 @@ export default async function DashboardPage() {
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-stemania-teal-100 dark:bg-stemania-teal-900">
               <svg
+                aria-hidden="true"
                 className="h-6 w-6 text-stemania-teal-600 dark:text-stemania-teal-400"
                 fill="none"
                 stroke="currentColor"
