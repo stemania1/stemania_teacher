@@ -18,6 +18,17 @@ setup("authenticate teacher", async ({ page }) => {
     );
   }
 
+  // Intercept check-email API to capture the response for diagnostics
+  let checkEmailResponse: { status: number; body: string } | null = null;
+  page.on("response", async (response) => {
+    if (response.url().includes("/api/auth/check-email")) {
+      checkEmailResponse = {
+        status: response.status(),
+        body: await response.text().catch(() => "failed to read body"),
+      };
+    }
+  });
+
   await page.goto("/login");
 
   // Step 1: Enter email
@@ -30,22 +41,16 @@ setup("authenticate teacher", async ({ page }) => {
   try {
     await passwordField.waitFor({ state: "visible", timeout: 15_000 });
   } catch {
-    // Password field didn't appear — capture page state for diagnostics
-    const errorAlert = page.getByRole("alert");
-    const hasError = await errorAlert.isVisible().catch(() => false);
-    let errorText = "";
-    if (hasError) {
-      // Wait briefly for React to render the error text
-      await page.waitForTimeout(500);
-      errorText = (await errorAlert.textContent()) ?? "";
-    }
-    const bodyText = await page.locator("body").innerText();
+    // Password field didn't appear — capture diagnostics
+    const currentUrl = page.url();
+    const bodyText = await page.locator("body").innerText().catch(() => "failed");
     throw new Error(
-      `Password field never appeared after clicking Continue.\n` +
-      `Error alert visible: ${hasError}\n` +
-      `Error text: "${errorText}"\n` +
-      `Page text: "${bodyText.substring(0, 500)}"\n` +
-      `Ensure E2E_TEACHER_EMAIL exists in the users table and uses email/password auth.`
+      [
+        "Password field never appeared after clicking Continue.",
+        `URL: ${currentUrl}`,
+        `check-email response: ${JSON.stringify(checkEmailResponse)}`,
+        `Page text (first 500 chars): ${bodyText.substring(0, 500)}`,
+      ].join("\n")
     );
   }
 
