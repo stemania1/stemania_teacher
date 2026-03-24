@@ -22,7 +22,7 @@ setup("authenticate teacher", async ({ page }) => {
 
   // Step 1: Enter email
   await page.getByLabel(/email/i).fill(email);
-  await page.getByRole("button", { name: /continue|next/i }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
 
   // Step 2: Enter password (email/password auth path)
   await page.getByLabel(/password/i).fill(password);
