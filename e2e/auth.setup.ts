@@ -24,8 +24,10 @@ setup("authenticate teacher", async ({ page }) => {
   await page.getByLabel(/email/i).fill(email);
   await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-  // Step 2: Enter password (email/password auth path)
-  await page.getByLabel(/password/i).fill(password);
+  // Step 2: Wait for password step to appear (check-email API must resolve first)
+  const passwordField = page.getByLabel(/password/i);
+  await passwordField.waitFor({ state: "visible", timeout: 15_000 });
+  await passwordField.fill(password);
   await page.getByRole("button", { name: /sign in|log in/i }).click();
 
   // Wait for redirect to dashboard
