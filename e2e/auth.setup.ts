@@ -25,8 +25,21 @@ setup("authenticate teacher", async ({ page }) => {
   await page.getByRole("button", { name: "Continue", exact: true }).click();
 
   // Step 2: Wait for password step to appear (check-email API must resolve first)
+  // Race between password field appearing and an error message showing up
   const passwordField = page.getByLabel(/password/i);
-  await passwordField.waitFor({ state: "visible", timeout: 15_000 });
+  const errorAlert = page.getByRole("alert");
+
+  await Promise.race([
+    passwordField.waitFor({ state: "visible", timeout: 15_000 }),
+    errorAlert.waitFor({ state: "visible", timeout: 15_000 }).then(async () => {
+      const errorText = await errorAlert.textContent();
+      throw new Error(
+        `Login failed after entering email: "${errorText}". ` +
+        `Ensure E2E_TEACHER_EMAIL exists in the users table and uses email/password auth.`
+      );
+    }),
+  ]);
+
   await passwordField.fill(password);
   await page.getByRole("button", { name: /sign in|log in/i }).click();
 
