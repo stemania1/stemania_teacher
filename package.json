@@ -40,6 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^5.1.4",
+    "axe-core": "^4.11.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "jsdom": "^28.1.0",
@@ -47,6 +48,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "vitest-axe": "^0.1.0"
   }
 }
