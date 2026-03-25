@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabaseServer";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSimulatedEmployeeNumber, isSuperAdmin } from "@/lib/simulation";
 
 export interface CurrentTeacher {
   employeeNumber: number;
@@ -44,13 +45,40 @@ export async function getCurrentTeacherFromDb(): Promise<CurrentTeacher | null> 
   }
 
   if (error || !user || user.employee_number == null) return null;
-  return {
+
+  const realTeacher: CurrentTeacher = {
     employeeNumber: user.employee_number as number,
     firstName: (user.first_name as string) || "",
     lastName: (user.last_name as string) || "",
     email: (user.email as string) || authUser.email || null,
     authUserId: authUser.id,
   };
+
+  // Super admin simulation: if the authenticated user is a super admin
+  // and a simulation cookie is set, return the simulated teacher instead
+  const callerEmail = realTeacher.email || authUser.email;
+  if (isSuperAdmin(callerEmail)) {
+    const simulatedEmpNumber = await getSimulatedEmployeeNumber();
+    if (simulatedEmpNumber !== null) {
+      const { data: simUser } = await admin
+        .from("users")
+        .select("employee_number, first_name, last_name, email, supabase_user_id")
+        .eq("employee_number", simulatedEmpNumber)
+        .single();
+
+      if (simUser && simUser.employee_number != null) {
+        return {
+          employeeNumber: simUser.employee_number as number,
+          firstName: (simUser.first_name as string) || "",
+          lastName: (simUser.last_name as string) || "",
+          email: (simUser.email as string) || null,
+          authUserId: authUser.id, // keep real auth ID for session
+        };
+      }
+    }
+  }
+
+  return realTeacher;
 }
 
 export async function hasAssignment(

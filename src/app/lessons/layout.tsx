@@ -1,4 +1,5 @@
 import TeacherNav from "@/components/TeacherNav";
+import SimulationBannerServer from "@/components/SimulationBannerServer";
 
 export default function LessonsLayout({
   children,
@@ -7,6 +8,7 @@ export default function LessonsLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <SimulationBannerServer />
       <TeacherNav />
       <main id="main-content" className="mx-auto max-w-7xl px-6 py-8">{children}</main>
     </div>
