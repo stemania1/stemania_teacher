@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { checkRateLimit, checkAuthRateLimit } from "@/lib/rateLimit";
 import { validateCsrf } from "@/lib/csrf";
+import { SIMULATE_COOKIE } from "@/lib/simulation";
 
 const PUBLIC_ROUTES = ["/", "/login", "/sign-up", "/sign-out", "/auth/callback", "/api/auth", "/reset-password", "/privacy-policy", "/terms", "/manifest", "/manifest.webmanifest", "/robots.txt"];
 const AUTH_ROUTES = ["/login", "/sign-up", "/api/auth"];
@@ -81,6 +82,46 @@ export async function middleware(request: NextRequest) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
+    }
+
+    // Handle super admin simulation
+    const simulateParam = request.nextUrl.searchParams.get("simulate");
+    if (simulateParam && user) {
+      const superAdminEmail = process.env.SUPER_ADMIN_EMAIL;
+      const isSuperAdmin =
+        superAdminEmail &&
+        user.email?.toLowerCase() === superAdminEmail.toLowerCase();
+
+      if (simulateParam === "stop") {
+        // Clear simulation cookie and redirect without the param
+        const cleanUrl = request.nextUrl.clone();
+        cleanUrl.searchParams.delete("simulate");
+        const redirectResponse = NextResponse.redirect(cleanUrl);
+        redirectResponse.cookies.set(SIMULATE_COOKIE, "", {
+          maxAge: 0,
+          path: "/",
+          httpOnly: true,
+          sameSite: "strict",
+        });
+        return redirectResponse;
+      }
+
+      if (isSuperAdmin) {
+        const employeeNumber = parseInt(simulateParam, 10);
+        if (!isNaN(employeeNumber)) {
+          // Set simulation cookie and redirect without the param
+          const cleanUrl = request.nextUrl.clone();
+          cleanUrl.searchParams.delete("simulate");
+          const redirectResponse = NextResponse.redirect(cleanUrl);
+          redirectResponse.cookies.set(SIMULATE_COOKIE, String(employeeNumber), {
+            maxAge: 60 * 60 * 4, // 4 hours
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+          });
+          return redirectResponse;
+        }
+      }
     }
   } catch (error) {
     console.error("Middleware auth error:", error);
