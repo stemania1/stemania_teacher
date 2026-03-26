@@ -13,7 +13,7 @@ export default async function Home() {
   if (user) redirect("/dashboard");
 
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col font-poppins">
       {/* Full-bleed hero background */}
       <Image
         src="/hero-bg.jpg"

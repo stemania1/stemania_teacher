@@ -12,16 +12,18 @@ export default async function DashboardPage() {
   }
 
   let firstName = "Teacher";
+  let isOnboarded = false;
   if (authUser.email) {
     const admin = getSupabaseAdmin();
     const { data: dbUser } = await admin
       .from("users")
-      .select("first_name")
+      .select("first_name, onboarding_status")
       .eq("email", authUser.email)
       .single();
     if (dbUser?.first_name) {
       firstName = dbUser.first_name;
     }
+    isOnboarded = dbUser?.onboarding_status === "fully_onboarded";
   }
 
   return (
@@ -38,7 +40,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <div>
+      {isOnboarded && <div>
         <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
           Quick Access
         </h2>
@@ -99,7 +101,7 @@ export default async function DashboardPage() {
             </p>
           </Link>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -42,10 +42,45 @@ const mockUser = {
   displayName: "Jane Doe",
 };
 
-function mockFetchUser(user: typeof mockUser | null = mockUser) {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: !!user,
-    json: () => Promise.resolve(user),
+const onboardedStatus = {
+  onboardingStatus: "fully_onboarded",
+  steps: {
+    accountCreated: true,
+    passwordSet: true,
+    w9Submitted: true,
+    contractSigned: true,
+    bankConnected: true,
+    fullyOnboarded: true,
+  },
+};
+
+const notOnboardedStatus = {
+  onboardingStatus: "applied",
+  steps: {
+    accountCreated: true,
+    passwordSet: false,
+    w9Submitted: false,
+    contractSigned: false,
+    bankConnected: false,
+    fullyOnboarded: false,
+  },
+};
+
+function mockFetchUser(
+  user: typeof mockUser | null = mockUser,
+  onboarding: typeof onboardedStatus = onboardedStatus,
+) {
+  global.fetch = vi.fn().mockImplementation((url: string) => {
+    if (url.includes("/api/teacher/onboarding-status")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(onboarding),
+      });
+    }
+    return Promise.resolve({
+      ok: !!user,
+      json: () => Promise.resolve(user),
+    });
   });
 }
 
@@ -121,5 +156,35 @@ describe("TeacherNav", () => {
     });
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("has sticky header class for mobile portrait mode", () => {
+    mockFetchUser();
+    const { container } = render(<TeacherNav />);
+    const header = container.querySelector("header");
+    expect(header?.className).toContain("sticky");
+    expect(header?.className).toContain("top-0");
+  });
+
+  it("hides lessons, classes, and schedule nav when not onboarded", async () => {
+    mockFetchUser(mockUser, notOnboardedStatus);
+    render(<TeacherNav />);
+    await waitFor(() => {
+      expect(screen.queryAllByText("My Lessons")).toHaveLength(0);
+      expect(screen.queryAllByText("My Classes")).toHaveLength(0);
+      expect(screen.queryAllByText("Schedule")).toHaveLength(0);
+    });
+    // Dashboard should still be visible
+    expect(screen.getAllByText("Dashboard").length).toBeGreaterThan(0);
+  });
+
+  it("shows all nav items when fully onboarded", async () => {
+    mockFetchUser(mockUser, onboardedStatus);
+    render(<TeacherNav />);
+    await waitFor(() => {
+      expect(screen.getAllByText("My Lessons").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("My Classes").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Schedule").length).toBeGreaterThan(0);
+    });
   });
 });
