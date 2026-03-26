@@ -138,8 +138,6 @@ describe("GET /api/bins", () => {
         }),
       }),
     };
-    // Second call to bins table will fail
-    let callCount = 0;
     mockSb.from = vi.fn().mockImplementation((table: string) => {
       if (table === "users") {
         return {
