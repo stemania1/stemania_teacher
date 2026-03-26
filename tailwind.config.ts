@@ -43,6 +43,7 @@ const config: Config = {
         display: ["Nunito", "system-ui", "sans-serif"],
         heading: ["DM Sans", "system-ui", "sans-serif"],
         body:    ["DM Sans", "system-ui", "sans-serif"],
+        poppins: ["Poppins", "system-ui", "sans-serif"],
         mono:    ["JetBrains Mono", "monospace"],
       },
     },

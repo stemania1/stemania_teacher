@@ -23,12 +23,22 @@ export default function TeacherNav() {
   const pathname = usePathname();
   const [user, setUser] = useState<UserMe | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState(true);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/users/me")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => data && setUser(data))
+      .catch(() => {});
+
+    fetch("/api/teacher/onboarding-status")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.steps) {
+          setIsOnboarded(data.steps.fullyOnboarded);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -45,6 +55,10 @@ export default function TeacherNav() {
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
+  const visibleNavItems = isOnboarded
+    ? navItems
+    : navItems.filter((item) => item.href === "/dashboard");
+
   const initials = user
     ? [user.firstName, user.lastName]
         .map((s) => (s || "").trim().charAt(0))
@@ -54,7 +68,7 @@ export default function TeacherNav() {
     : "?";
 
   return (
-    <header className="border-b border-stemania-teal-200 bg-white dark:border-stemania-teal-800 dark:bg-gray-800">
+    <header className="sticky top-0 z-40 border-b border-stemania-teal-200 bg-white dark:border-stemania-teal-800 dark:bg-gray-800 md:static md:z-auto">
       <div className="container mx-auto flex items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/dashboard" className="flex-shrink-0" aria-label="Return to dashboard">
           <div className="relative h-10 w-[120px] sm:h-12 sm:w-36">
@@ -63,7 +77,7 @@ export default function TeacherNav() {
         </Link>
         <nav aria-label="Main navigation" className="flex items-center gap-2">
           <div className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -134,7 +148,7 @@ export default function TeacherNav() {
         aria-label="Mobile navigation"
         className="flex items-center gap-1 overflow-x-auto px-4 pb-3 sm:px-6 md:hidden scrollbar-hide"
       >
-        {navItems.map((item) => (
+        {visibleNavItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
