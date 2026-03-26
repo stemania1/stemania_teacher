@@ -37,3 +37,17 @@ export async function parseBody<T extends z.ZodTypeAny>(
 export const logActionSchema = z.object({
   action: z.enum(["print_attempt", "copy_attempt", "download_attempt", "screenshot_attempt"]),
 });
+
+export const inventoryCheckSchema = z.object({
+  check_type: z.enum(["pre_series", "post_series"]),
+  items: z
+    .array(
+      z.object({
+        bin_item_id: z.string().min(1),
+        status: z.enum(["present", "missing", "damaged"]),
+        quantity_found: z.number().int().min(0),
+        notes: z.string().optional(),
+      })
+    )
+    .min(1, "At least one item is required"),
+});
