@@ -14,6 +14,7 @@ interface OnboardingSteps {
 
 interface OnboardingData {
   onboardingStatus: string;
+  contractSent?: boolean;
   steps: OnboardingSteps;
 }
 
@@ -22,6 +23,7 @@ interface StepConfig {
   title: string;
   description: string;
   action?: React.ReactNode;
+  completedAction?: React.ReactNode;
 }
 
 function CheckIcon() {
@@ -109,12 +111,31 @@ export default function OnboardingChecklist() {
           Complete your W-9
         </a>
       ),
+      completedAction: (
+        <a
+          href={`${adminAppUrl}/login?next=/w9`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-[#0D6EFD] hover:underline"
+        >
+          View your W-9
+        </a>
+      ),
     },
     {
       key: "contractSigned",
       title: "Contract Signed",
       description: "Review and sign your teaching contract.",
-      action: (
+      action: data.contractSent ? (
+        <a
+          href={`${adminAppUrl}/login?next=/contract`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs font-medium text-[#0D6EFD] hover:underline"
+        >
+          Sign your contract
+        </a>
+      ) : (
         <span className="text-xs text-gray-500 dark:text-gray-400">
           Your admin will send this
         </span>
@@ -201,9 +222,9 @@ export default function OnboardingChecklist() {
                     {step.description}
                   </p>
                 </div>
-                {!complete && step.action && (
+                {((!complete && step.action) || (complete && step.completedAction)) && (
                   <div className="mt-2 shrink-0 sm:mt-0 sm:ml-4">
-                    {step.action}
+                    {complete ? step.completedAction : step.action}
                   </div>
                 )}
               </div>

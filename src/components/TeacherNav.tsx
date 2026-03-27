@@ -24,7 +24,7 @@ export default function TeacherNav() {
   const pathname = usePathname();
   const [user, setUser] = useState<UserMe | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isOnboarded, setIsOnboarded] = useState(true);
+  const [isOnboarded, setIsOnboarded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

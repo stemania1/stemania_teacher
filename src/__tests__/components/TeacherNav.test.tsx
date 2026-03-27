@@ -187,4 +187,16 @@ describe("TeacherNav", () => {
       expect(screen.getAllByText("Schedule").length).toBeGreaterThan(0);
     });
   });
+
+  it("hides nav items on initial render before API responds", () => {
+    // API never resolves — simulates slow network
+    global.fetch = vi.fn().mockReturnValue(new Promise(() => {}));
+    render(<TeacherNav />);
+    // Before the API responds, non-dashboard nav items must be hidden
+    expect(screen.queryAllByText("My Lessons")).toHaveLength(0);
+    expect(screen.queryAllByText("My Classes")).toHaveLength(0);
+    expect(screen.queryAllByText("Schedule")).toHaveLength(0);
+    // Dashboard should still be visible
+    expect(screen.getAllByText("Dashboard").length).toBeGreaterThan(0);
+  });
 });
