@@ -114,6 +114,109 @@ describe("GET /api/teacher/onboarding-status", () => {
     });
   });
 
+  it("returns contractSent true when a pending contract signing request exists", async () => {
+    vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
+
+    const mockSb = {
+      from: vi.fn().mockImplementation((table: string) => {
+        if (table === "users") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                single: vi.fn().mockResolvedValue({
+                  data: { requires_password_change: false, onboarding_status: "applied" },
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "w9_submissions") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({
+                    data: { status: "completed" },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "signing_requests") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                neq: vi.fn().mockResolvedValue({
+                  data: [{ document_type: "contract", status: "pending" }],
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+        return { select: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis() };
+      }),
+    };
+    vi.mocked(getSupabaseAdmin).mockReturnValue(mockSb as never);
+
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.contractSent).toBe(true);
+    expect(body.steps.contractSigned).toBe(false);
+  });
+
+  it("returns contractSent false when no contract signing request exists", async () => {
+    vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
+
+    const mockSb = {
+      from: vi.fn().mockImplementation((table: string) => {
+        if (table === "users") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                single: vi.fn().mockResolvedValue({
+                  data: { requires_password_change: false, onboarding_status: "applied" },
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "w9_submissions") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "signing_requests") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                neq: vi.fn().mockResolvedValue({ data: [], error: null }),
+              }),
+            }),
+          };
+        }
+        return { select: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis() };
+      }),
+    };
+    vi.mocked(getSupabaseAdmin).mockReturnValue(mockSb as never);
+
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.contractSent).toBe(false);
+  });
+
   it("returns partial onboarding status", async () => {
     vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
 

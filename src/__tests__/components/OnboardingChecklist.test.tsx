@@ -101,6 +101,66 @@ describe("OnboardingChecklist", () => {
     });
   });
 
+  it("shows 'View your W-9' link when W-9 step is completed", async () => {
+    mockFetch({
+      onboardingStatus: "applied",
+      steps: {
+        accountCreated: true,
+        passwordSet: true,
+        w9Submitted: true,
+        contractSigned: false,
+        bankConnected: false,
+        fullyOnboarded: false,
+      },
+    });
+    render(<OnboardingChecklist />);
+    await waitFor(() => {
+      expect(screen.getByText("View your W-9")).toBeTruthy();
+    });
+    const link = screen.getByText("View your W-9");
+    expect(link.closest("a")).toBeTruthy();
+  });
+
+  it("shows 'Sign your contract' link when contract has been sent but not signed", async () => {
+    mockFetch({
+      onboardingStatus: "applied",
+      contractSent: true,
+      steps: {
+        accountCreated: true,
+        passwordSet: true,
+        w9Submitted: true,
+        contractSigned: false,
+        bankConnected: false,
+        fullyOnboarded: false,
+      },
+    });
+    render(<OnboardingChecklist />);
+    await waitFor(() => {
+      expect(screen.getByText("Sign your contract")).toBeTruthy();
+    });
+    const link = screen.getByText("Sign your contract");
+    expect(link.closest("a")).toBeTruthy();
+  });
+
+  it("shows 'Your admin will send this' when contract has not been sent", async () => {
+    mockFetch({
+      onboardingStatus: "applied",
+      contractSent: false,
+      steps: {
+        accountCreated: true,
+        passwordSet: true,
+        w9Submitted: true,
+        contractSigned: false,
+        bankConnected: false,
+        fullyOnboarded: false,
+      },
+    });
+    render(<OnboardingChecklist />);
+    await waitFor(() => {
+      expect(screen.getByText("Your admin will send this")).toBeTruthy();
+    });
+  });
+
   it("has no accessibility violations when checklist is visible", async () => {
     mockFetch(partialSteps);
     const { container } = render(<OnboardingChecklist />);

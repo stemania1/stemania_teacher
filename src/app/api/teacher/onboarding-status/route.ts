@@ -35,10 +35,15 @@ export async function GET() {
     .eq("user_id", teacher.employeeNumber)
     .neq("status", "cancelled");
 
-  const contractSigned =
-    signingRequests?.some(
-      (r) => r.document_type === "contract" && r.status === "completed"
-    ) ?? false;
+  const contractRequests = signingRequests?.filter(
+    (r) => r.document_type === "contract"
+  ) ?? [];
+
+  const contractSent = contractRequests.length > 0;
+
+  const contractSigned = contractRequests.some(
+    (r) => r.status === "completed"
+  );
 
   const onboardingStatus: string = user.onboarding_status ?? "applied";
 
@@ -50,6 +55,7 @@ export async function GET() {
 
   return NextResponse.json({
     onboardingStatus,
+    contractSent,
     steps: {
       accountCreated: true,
       passwordSet: !(user.requires_password_change ?? false),
