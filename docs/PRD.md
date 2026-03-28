@@ -119,8 +119,11 @@ Unique constraint on `(class_id, student_id, session_date)`.
 
 ## 6. Teacher Profile
 
-- `/dashboard/my-information` — displays name and email
-- Profile edits are managed through the admin portal
+- `/dashboard/my-information` — displays and allows editing of teacher profile
+- Teachers can update their **first name** and **last name** directly in the teacher app
+- Email is displayed but not editable (managed through Supabase Auth)
+- Inline edit mode with save/cancel controls
+- Updates are saved to the `users` table via `PATCH /api/users/me`
 
 ---
 
@@ -229,6 +232,7 @@ This project follows a **test-driven development** methodology. All new features
 | Method | Route | Description |
 |--------|-------|-------------|
 | GET | `/api/users/me` | Current teacher info |
+| PATCH | `/api/users/me` | Update teacher profile (name) |
 | GET | `/api/classes` | Teacher's assigned classes |
 | GET | `/api/classes/[classId]/students` | Enrolled students |
 | GET | `/api/classes/[classId]/attendance?date=` | Attendance for a date |
