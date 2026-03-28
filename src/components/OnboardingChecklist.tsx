@@ -112,14 +112,12 @@ export default function OnboardingChecklist() {
         </a>
       ),
       completedAction: (
-        <a
-          href={`${adminAppUrl}/login?next=/w9`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/dashboard/w9"
           className="text-xs font-medium text-[#0D6EFD] hover:underline"
         >
           View your W-9
-        </a>
+        </Link>
       ),
     },
     {
@@ -127,14 +125,12 @@ export default function OnboardingChecklist() {
       title: "Contract Signed",
       description: "Review and sign your teaching contract.",
       action: data.contractSent ? (
-        <a
-          href={`${adminAppUrl}/login?next=/contract`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/dashboard/contract"
           className="text-xs font-medium text-[#0D6EFD] hover:underline"
         >
           Sign your contract
-        </a>
+        </Link>
       ) : (
         <span className="text-xs text-gray-500 dark:text-gray-400">
           Your admin will send this

@@ -117,8 +117,9 @@ describe("OnboardingChecklist", () => {
     await waitFor(() => {
       expect(screen.getByText("View your W-9")).toBeTruthy();
     });
-    const link = screen.getByText("View your W-9");
-    expect(link.closest("a")).toBeTruthy();
+    const link = screen.getByText("View your W-9").closest("a");
+    expect(link).toBeTruthy();
+    expect(link?.getAttribute("href")).toBe("/dashboard/w9");
   });
 
   it("shows 'Sign your contract' link when contract has been sent but not signed", async () => {
@@ -138,8 +139,9 @@ describe("OnboardingChecklist", () => {
     await waitFor(() => {
       expect(screen.getByText("Sign your contract")).toBeTruthy();
     });
-    const link = screen.getByText("Sign your contract");
-    expect(link.closest("a")).toBeTruthy();
+    const link = screen.getByText("Sign your contract").closest("a");
+    expect(link).toBeTruthy();
+    expect(link?.getAttribute("href")).toBe("/dashboard/contract");
   });
 
   it("shows 'Your admin will send this' when contract has not been sent", async () => {
