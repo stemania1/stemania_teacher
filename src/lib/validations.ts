@@ -34,6 +34,13 @@ export async function parseBody<T extends z.ZodTypeAny>(
   return { data: result.data };
 }
 
+export const updateProfileSchema = z.object({
+  firstName: z.string().max(100).optional(),
+  lastName: z.string().max(100).optional(),
+}).refine((data) => data.firstName !== undefined || data.lastName !== undefined, {
+  message: "At least one of firstName or lastName must be provided",
+});
+
 export const logActionSchema = z.object({
   action: z.enum(["print_attempt", "copy_attempt", "download_attempt", "screenshot_attempt"]),
 });

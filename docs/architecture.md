@@ -109,7 +109,7 @@ stemania_teacher/
 | `/dashboard` | Main dashboard with onboarding checklist |
 | `/dashboard/classes` | Teacher's assigned classes |
 | `/dashboard/classes/[classId]/attendance` | Attendance taking + history |
-| `/dashboard/my-information` | Teacher profile (read-only) |
+| `/dashboard/my-information` | Teacher profile (editable name) |
 | `/lessons` | Assigned lessons grouped by curriculum |
 | `/lessons/[id]` | Lesson viewer with content protection |
 | `/schedule` | Weekly class schedule grid |
@@ -131,6 +131,7 @@ stemania_teacher/
 |--------|-------|-------------|
 | POST | `/api/auth/check-email` | Detect auth provider for an email |
 | GET | `/api/users/me` | Current teacher info |
+| PATCH | `/api/users/me` | Update teacher name |
 | GET | `/api/teacher/onboarding-status` | Onboarding step completion |
 | GET | `/api/lessons` | Assigned lessons with curriculum details |
 | GET | `/api/lessons/[id]` | Full lesson HTML with watermark + signed URLs |
@@ -226,7 +227,7 @@ Located at `./shared/`, this is a monorepo package shared between the teacher an
 - The admin app (`admin.stemania.com`) is a **separate repository** at `~/Projects/STEMania Admin/stemania_admin`
 - Both apps share the **same Supabase project** (same database, auth, storage)
 - Teacher onboarding configuration, user management, lesson authoring, and curriculum management live in the admin app
-- The teacher app is read-only for most data — it reads lessons, classes, and user info but only writes attendance records and access logs
+- The teacher app is read-only for most data — it reads lessons, classes, and user info but writes attendance records, access logs, and teacher profile updates (name only)
 - Shared docs (style guide, backlog, etc.) live in the admin repo at `~/Projects/STEMania Admin/stemania_admin/docs/`
 
 ---
