@@ -65,7 +65,7 @@ export async function GET() {
     }
 
     const admin = getSupabaseAdmin();
-    let pdfKey = contract.pdf_storage_key;
+    const pdfKey = contract.pdf_storage_key;
     let { data: signedUrl, error: storageError } = await admin.storage
       .from(BUCKET)
       .createSignedUrl(pdfKey, SIGNED_URL_EXPIRES_SEC);
