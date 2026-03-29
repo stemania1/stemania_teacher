@@ -6,19 +6,40 @@ import { handleApiError } from "@/lib/apiErrorHandler";
 const BUCKET = "signed-documents";
 const SIGNED_URL_EXPIRES_SEC = 3600; // 1 hour
 
+interface FieldSchemaEntry {
+  id: string;
+  type: "signature" | "date" | "text" | "initials" | "checkbox";
+  label: string;
+  page: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  required: boolean;
+  assignee: "contractor" | "admin";
+  fontSize?: number;
+}
+
+interface SigningRequestMetadata {
+  template_type?: string;
+  field_schema_snapshot?: FieldSchemaEntry[];
+  [key: string]: unknown;
+}
+
 interface SigningRequest {
   id: string;
   status: string;
   pdf_storage_key: string | null;
   signed_document_key: string | null;
   contractor_signed_at: string | null;
+  metadata: SigningRequestMetadata | null;
 }
 
 async function getActiveContract(employeeNumber: number): Promise<SigningRequest | null> {
   const admin = getSupabaseAdmin();
   const { data } = await admin
     .from("signing_requests")
-    .select("id, status, pdf_storage_key, signed_document_key, contractor_signed_at")
+    .select("id, status, pdf_storage_key, signed_document_key, contractor_signed_at, metadata")
     .eq("user_id", employeeNumber)
     .eq("document_type", "contract")
     .neq("status", "cancelled")
@@ -55,13 +76,20 @@ export async function GET() {
       );
     }
 
-    const needsContractorSignature = !contract.contractor_signed_at;
+    const metadata = contract.metadata ?? {};
+    const templateType = metadata.template_type ?? "generated";
+    const allFields = metadata.field_schema_snapshot ?? [];
+    const contractorFields = allFields.filter(
+      (f: FieldSchemaEntry) => f.assignee === "contractor"
+    );
 
     return NextResponse.json({
       id: contract.id,
       status: contract.status,
       pdfUrl: signedUrl.signedUrl,
-      needsContractorSignature,
+      needsContractorSignature: !contract.contractor_signed_at,
+      templateType,
+      fieldSchema: contractorFields,
     });
   } catch (error) {
     return handleApiError(error, "Failed to load contract");
@@ -88,7 +116,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { signatureMethod, signatureBase64, signatureText } = body;
+    const { signatureMethod, signatureBase64, signatureText, fieldValues, signatures } = body;
 
     if (
       signatureMethod !== "draw" && signatureMethod !== "typed" ||
@@ -109,26 +137,25 @@ export async function POST(request: NextRequest) {
     const admin = getSupabaseAdmin();
     const now = new Date().toISOString();
 
-    const metadata = {
-      contractor: {
-        method: signatureMethod,
-        ...(signatureMethod === "draw"
-          ? { signatureBase64 }
-          : { signatureText }),
-        ip,
-        signedAt: now,
-      },
-    };
+    const existingMetadata = contract.metadata ?? {};
 
-    const newPdfKey = `contracts/${contract.id}/contractor-signed.pdf`;
+    const updatedMetadata: Record<string, unknown> = {
+      ...existingMetadata,
+      contractor_signature_method: signatureMethod,
+      contractor_signature_base64: signatureMethod === "draw" ? signatureBase64 : null,
+      contractor_signature_text: signatureMethod === "typed" ? signatureText : null,
+      contractor_signature_ip: ip,
+      contractor_signed_at: now,
+      ...(fieldValues ? { field_values: fieldValues } : {}),
+      ...(signatures ? { field_signatures: signatures } : {}),
+    };
 
     const { error: updateError } = await admin
       .from("signing_requests")
       .update({
         status: "signed",
         contractor_signed_at: now,
-        pdf_storage_key: newPdfKey,
-        metadata,
+        metadata: updatedMetadata,
       })
       .eq("id", contract.id);
 
