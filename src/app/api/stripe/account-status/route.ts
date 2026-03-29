@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentTeacherFromDb } from "@/lib/lessonDeliveryAuth";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { getStripe } from "@/lib/stripe";
 import { handleApiError } from "@/lib/apiErrorHandler";
 
 export async function GET() {
@@ -22,6 +23,20 @@ export async function GET() {
     }
 
     if (user.stripe_onboarding_complete) {
+      return NextResponse.json({ status: "complete" });
+    }
+
+    // DB not yet updated — check Stripe directly (webhook may be delayed)
+    const stripe = getStripe();
+    const account = await stripe.accounts.retrieve(user.stripe_account_id);
+
+    if (account.details_submitted && account.charges_enabled) {
+      // Sync the DB so future checks are fast
+      await admin
+        .from("users")
+        .update({ stripe_onboarding_complete: true })
+        .eq("employee_number", teacher.employeeNumber);
+
       return NextResponse.json({ status: "complete" });
     }
 
