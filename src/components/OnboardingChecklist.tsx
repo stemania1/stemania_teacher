@@ -101,13 +101,43 @@ export default function OnboardingChecklist() {
   const [data, setData] = useState<OnboardingData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchStatus = () =>
     fetch("/api/teacher/onboarding-status")
       .then((r) => r.json())
       .then((d: OnboardingData) => setData(d))
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
+      .catch(() => setData(null));
+
+  useEffect(() => {
+    fetchStatus().finally(() => setLoading(false));
   }, []);
+
+  // When returning from Stripe, poll account-status until it's complete
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("stripe") !== "complete" && params.get("stripe") !== "refresh") return;
+    if (data?.steps.bankConnected) return;
+
+    let attempts = 0;
+    const maxAttempts = 10;
+    const interval = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await fetch("/api/stripe/account-status");
+        const { status } = await res.json();
+        if (status === "complete") {
+          clearInterval(interval);
+          fetchStatus(); // refresh all steps
+          // Clean up the URL
+          const url = new URL(window.location.href);
+          url.searchParams.delete("stripe");
+          window.history.replaceState({}, "", url.pathname);
+        }
+      } catch { /* ignore */ }
+      if (attempts >= maxAttempts) clearInterval(interval);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [data?.steps.bankConnected]);
 
   if (loading || !data || data.steps.fullyOnboarded) return null;
 
