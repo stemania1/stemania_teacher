@@ -35,7 +35,62 @@
 - Steps include: profile completion, W-9 submission, document signing, etc.
 - Checklist auto-hides once all steps are completed
 
-### 4.2 My Lessons
+### 4.2 Contract Signing
+
+When an admin sends a teaching contract from the admin app, the teacher should be able to view and sign it as part of their onboarding process.
+
+#### Flow
+
+1. **Admin sends contract** — In the admin app, an admin creates a contract for the teacher. This creates a `signing_requests` record with `document_type = "contract"` and uploads the contract PDF to Supabase Storage (`signed-documents` bucket).
+2. **Teacher sees contract step** — The onboarding checklist on the dashboard shows a "Contract Signed" step. When the contract has been sent (`contractSent = true`), a "Sign your contract" link appears pointing to `/dashboard/contract`.
+3. **Teacher reviews contract** — The contract page (`/dashboard/contract`) displays the contract PDF in an embedded viewer so the teacher can read the full document.
+4. **Teacher signs contract** — Below the PDF, the teacher can sign using one of two methods:
+   - **Typed signature** — Type their full legal name
+   - **Drawn signature** — Draw their signature on a canvas (supports mouse and touch)
+5. **Signature recorded** — The signature, method, timestamp, and IP address are stored in the `signing_requests.metadata` JSON field. The signing request status updates to `"signed"` and `contractor_signed_at` is set.
+6. **Admin countersigns** — After the teacher signs, the admin reviews and countersigns in the admin app to complete the contract (status → `"completed"`).
+
+#### States
+
+| State | UI Behavior |
+|-------|-------------|
+| No contract sent | Checklist shows "Your admin will send this" |
+| Contract sent, unsigned | Checklist shows "Sign your contract" link; contract page shows PDF + signature area |
+| Contract signed by teacher | Success message; contract page shows PDF with "Waiting for admin countersignature" |
+| Contract completed (both signed) | Checklist step marked complete |
+
+#### Data Model
+
+The `signing_requests` table tracks contract lifecycle:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID | Primary key |
+| `user_id` | INTEGER | FK to `users.employee_number` |
+| `document_type` | TEXT | `"contract"` |
+| `status` | TEXT | `"sent"`, `"signed"`, `"completed"`, or `"cancelled"` |
+| `pdf_storage_key` | TEXT | Path to the contract PDF in Supabase Storage |
+| `signed_document_key` | TEXT | Path to the countersigned PDF (nullable) |
+| `contractor_signed_at` | TIMESTAMPTZ | When the teacher signed (nullable) |
+| `metadata` | JSONB | Signature details (method, data, IP, timestamp) |
+| `created_at` | TIMESTAMPTZ | When the signing request was created |
+
+#### Signature Metadata Structure
+
+```json
+{
+  "contractor": {
+    "method": "typed" | "draw",
+    "signatureText": "Jane Doe",
+    "ip": "203.0.113.1",
+    "signedAt": "2026-03-27T10:00:00Z"
+  }
+}
+```
+
+For drawn signatures, `signatureBase64` replaces `signatureText` with the canvas data URL.
+
+### 4.3 My Lessons
 
 - `/lessons` — list of assigned lessons grouped by curriculum
 - Each lesson card shows title, description, estimated duration, and a "Slides" badge if the lesson contains a presentation
@@ -244,3 +299,6 @@ This project follows a **test-driven development** methodology. All new features
 | POST | `/api/lessons/[id]/slides/refresh` | Refresh expired signed slide URLs |
 | POST | `/api/lessons/[id]/log-action` | Log blocked actions |
 | GET | `/api/teacher/onboarding-status` | Onboarding progress |
+| GET | `/api/teacher/contract` | Active contract with signed PDF URL |
+| POST | `/api/teacher/contract` | Sign contract (typed or drawn signature) |
+| GET | `/api/teacher/w9/view` | Signed URL for completed W-9 PDF |
