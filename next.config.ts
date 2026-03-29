@@ -23,7 +23,7 @@ const cspDirectives = [
   `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
   `font-src 'self' https://fonts.gstatic.com`,
   `connect-src 'self' ${supabaseOrigin} ${sentryOrigin}`.trim(),
-  "frame-src 'self'",
+  `frame-src 'self' ${supabaseOrigin}`.trim(),
   "frame-ancestors 'self'",
   "form-action 'self'",
   "base-uri 'self'",

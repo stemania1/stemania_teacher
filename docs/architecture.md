@@ -23,10 +23,12 @@ stemania_teacher/
 │   │   │   ├── lessons/[id]/slides/refresh/
 │   │   │   ├── lessons/[id]/
 │   │   │   ├── lessons/
+│   │   │   ├── teacher/contract/
 │   │   │   ├── teacher/onboarding-status/
+│   │   │   ├── teacher/w9/view/
 │   │   │   └── users/me/
 │   │   ├── auth/callback/      # OAuth callback
-│   │   ├── dashboard/          # Main dashboard + classes + attendance
+│   │   ├── dashboard/          # Main dashboard + classes + attendance + contract + w9
 │   │   ├── lessons/            # Lesson list + viewer
 │   │   ├── login/              # Login page
 │   │   ├── schedule/           # Weekly class schedule
@@ -109,6 +111,8 @@ stemania_teacher/
 | `/dashboard` | Main dashboard with onboarding checklist |
 | `/dashboard/classes` | Teacher's assigned classes |
 | `/dashboard/classes/[classId]/attendance` | Attendance taking + history |
+| `/dashboard/contract` | Contract review and signing |
+| `/dashboard/w9` | View completed W-9 PDF |
 | `/dashboard/my-information` | Teacher profile (editable name) |
 | `/lessons` | Assigned lessons grouped by curriculum |
 | `/lessons/[id]` | Lesson viewer with content protection |
@@ -133,6 +137,9 @@ stemania_teacher/
 | GET | `/api/users/me` | Current teacher info |
 | PATCH | `/api/users/me` | Update teacher name |
 | GET | `/api/teacher/onboarding-status` | Onboarding step completion |
+| GET | `/api/teacher/contract` | Active contract with signed PDF URL |
+| POST | `/api/teacher/contract` | Sign contract (typed or drawn signature) |
+| GET | `/api/teacher/w9/view` | Signed URL for completed W-9 PDF |
 | GET | `/api/lessons` | Assigned lessons with curriculum details |
 | GET | `/api/lessons/[id]` | Full lesson HTML with watermark + signed URLs |
 | POST | `/api/lessons/[id]/log-action` | Log blocked user actions |
