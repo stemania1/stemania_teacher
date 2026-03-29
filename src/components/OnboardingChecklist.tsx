@@ -59,6 +59,44 @@ function StepIcon({ complete }: { complete: boolean }) {
   );
 }
 
+function ConnectBankButton() {
+  const [connecting, setConnecting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleConnect = async () => {
+    setConnecting(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/stripe/connect", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to start bank account setup");
+      }
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setConnecting(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      {error && (
+        <span className="text-xs text-red-500">{error}</span>
+      )}
+      <button
+        type="button"
+        onClick={handleConnect}
+        disabled={connecting}
+        className="rounded-lg bg-stemania-teal-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-stemania-teal-600 disabled:opacity-50"
+      >
+        {connecting ? "Connecting..." : "Connect Bank Account"}
+      </button>
+    </div>
+  );
+}
+
 export default function OnboardingChecklist() {
   const [data, setData] = useState<OnboardingData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -141,11 +179,7 @@ export default function OnboardingChecklist() {
       key: "bankConnected",
       title: "Bank Account Connected",
       description: "Link your bank account to receive payments.",
-      action: (
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          Your admin will set this up
-        </span>
-      ),
+      action: <ConnectBankButton />,
     },
     {
       key: "fullyOnboarded",

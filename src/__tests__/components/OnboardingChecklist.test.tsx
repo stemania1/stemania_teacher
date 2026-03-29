@@ -90,6 +90,7 @@ describe("OnboardingChecklist", () => {
     await waitFor(() => {
       expect(screen.getByText("Set Password")).toBeTruthy();
       expect(screen.getByText("Complete your W-9")).toBeTruthy();
+      expect(screen.getByText("Connect Bank Account")).toBeTruthy();
     });
   });
 

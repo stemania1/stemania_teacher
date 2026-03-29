@@ -12,7 +12,7 @@ export async function GET() {
 
   const { data: user, error: userError } = await admin
     .from("users")
-    .select("requires_password_change, onboarding_status")
+    .select("requires_password_change, onboarding_status, stripe_onboarding_complete")
     .eq("employee_number", teacher.employeeNumber)
     .single();
 
@@ -48,6 +48,7 @@ export async function GET() {
   const onboardingStatus: string = user.onboarding_status ?? "applied";
 
   const bankConnected =
+    !!(user.stripe_onboarding_complete) ||
     onboardingStatus === "bank_connected" ||
     onboardingStatus === "fully_onboarded";
 
