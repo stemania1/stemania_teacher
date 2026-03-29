@@ -197,6 +197,59 @@ describe("GET /api/teacher/contract", () => {
     expect(body.needsContractorSignature).toBe(false);
   });
 
+  it("falls back to unsigned.pdf when corrupted contractor-signed.pdf key fails", async () => {
+    vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
+
+    const createSignedUrl = vi.fn()
+      .mockResolvedValueOnce({ data: null, error: new Error("not found") }) // corrupted key fails
+      .mockResolvedValueOnce({ data: { signedUrl: "https://storage.example.com/fallback-url" }, error: null }); // fallback succeeds
+
+    const mockUpdate = vi.fn().mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ error: null }),
+    });
+
+    const mockSb = {
+      from: vi.fn().mockImplementation(() => ({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              neq: vi.fn().mockReturnValue({
+                order: vi.fn().mockReturnValue({
+                  limit: vi.fn().mockReturnValue({
+                    maybeSingle: vi.fn().mockResolvedValue({
+                      data: {
+                        id: "req-uuid-1",
+                        status: "signed",
+                        pdf_storage_key: "contracts/req-uuid-1/contractor-signed.pdf",
+                        signed_document_key: null,
+                        contractor_signed_at: "2026-03-27T10:00:00Z",
+                        metadata: { template_type: "generated" },
+                      },
+                      error: null,
+                    }),
+                  }),
+                }),
+              }),
+            }),
+          }),
+        }),
+        update: mockUpdate,
+      })),
+      storage: {
+        from: vi.fn().mockReturnValue({ createSignedUrl }),
+      },
+    };
+    vi.mocked(getSupabaseAdmin).mockReturnValue(mockSb as never);
+
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.pdfUrl).toBe("https://storage.example.com/fallback-url");
+    // Should have tried the fallback path
+    expect(createSignedUrl).toHaveBeenCalledTimes(2);
+    expect(createSignedUrl.mock.calls[1][0]).toBe("contracts/req-uuid-1/unsigned.pdf");
+  });
+
   it("returns contractor-assigned fields from custom_pdf template", async () => {
     vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
     vi.mocked(getSupabaseAdmin).mockReturnValue(

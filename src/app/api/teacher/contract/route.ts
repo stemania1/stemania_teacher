@@ -65,9 +65,28 @@ export async function GET() {
     }
 
     const admin = getSupabaseAdmin();
-    const { data: signedUrl, error: storageError } = await admin.storage
+    let pdfKey = contract.pdf_storage_key;
+    let { data: signedUrl, error: storageError } = await admin.storage
       .from(BUCKET)
-      .createSignedUrl(contract.pdf_storage_key, SIGNED_URL_EXPIRES_SEC);
+      .createSignedUrl(pdfKey, SIGNED_URL_EXPIRES_SEC);
+
+    // Fallback: a previous bug replaced the key with contractor-signed.pdf
+    // which doesn't exist. Try the original unsigned.pdf path instead.
+    if ((storageError || !signedUrl?.signedUrl) && pdfKey.includes("contractor-signed")) {
+      const fallbackKey = pdfKey.replace("contractor-signed.pdf", "unsigned.pdf");
+      const fallback = await admin.storage
+        .from(BUCKET)
+        .createSignedUrl(fallbackKey, SIGNED_URL_EXPIRES_SEC);
+      if (fallback.data?.signedUrl) {
+        signedUrl = fallback.data;
+        storageError = null;
+        // Fix the corrupted key in the database
+        await admin
+          .from("signing_requests")
+          .update({ pdf_storage_key: fallbackKey })
+          .eq("id", contract.id);
+      }
+    }
 
     if (storageError || !signedUrl?.signedUrl) {
       return NextResponse.json(
