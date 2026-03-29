@@ -217,6 +217,58 @@ describe("GET /api/teacher/onboarding-status", () => {
     expect(body.contractSent).toBe(false);
   });
 
+  it("returns bankConnected true when stripe_onboarding_complete is true", async () => {
+    vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
+
+    const mockSb = {
+      from: vi.fn().mockImplementation((table: string) => {
+        if (table === "users") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                single: vi.fn().mockResolvedValue({
+                  data: {
+                    requires_password_change: false,
+                    onboarding_status: "applied",
+                    stripe_onboarding_complete: true,
+                  },
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "w9_submissions") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                  maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+                }),
+              }),
+            }),
+          };
+        }
+        if (table === "signing_requests") {
+          return {
+            select: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                neq: vi.fn().mockResolvedValue({ data: [], error: null }),
+              }),
+            }),
+          };
+        }
+        return { select: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis() };
+      }),
+    };
+    vi.mocked(getSupabaseAdmin).mockReturnValue(mockSb as never);
+
+    const response = await GET();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.steps.bankConnected).toBe(true);
+  });
+
   it("returns partial onboarding status", async () => {
     vi.mocked(getCurrentTeacherFromDb).mockResolvedValue(mockTeacher);
 
